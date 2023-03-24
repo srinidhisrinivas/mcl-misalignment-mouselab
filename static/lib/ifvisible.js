@@ -282,14 +282,19 @@
         init();
         paused = false;
         if (callback) {
+
           t = setInterval(function() {
             if (status === "active" && paused === false) {
               return callback();
             }
           }, seconds * 1000);
+          console.log("Interval set")
+          console.log(t)
         }
         return {
           stop: function() {
+            console.log("Stopping timer")
+            console.log(t)
             return clearInterval(t);
           },
           pause: function() {

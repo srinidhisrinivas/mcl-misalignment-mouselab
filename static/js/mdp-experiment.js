@@ -104,6 +104,7 @@ initializeExperiment = function() {
     stateClickCost: function() {
       return COST;
     },
+    minTime: 10,
     stateDisplay: 'click',
     stateResetMs: 2000,
     accumulateReward: true,
@@ -121,8 +122,9 @@ initializeExperiment = function() {
     // trial_id: jsPsych.timelineVariable('trial_id',true)
     blockName: 'test',
     upperMessage: "Web of Cash - Practice Round",
-    lowerMessage: `Click on the nodes to reveal their values.<br>
-Move with the arrow keys after you are done clicking.`,
+    nextClickTimeLimit: 2,
+//     lowerMessage: `Click on the nodes to reveal their values.<br>
+// Move with the arrow keys after you are done clicking.`,
     timeline: getPracticeTrials(num_trials),
     trialCount: function() {
       return pracTrialCount;

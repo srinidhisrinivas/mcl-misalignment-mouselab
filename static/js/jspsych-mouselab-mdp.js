@@ -126,6 +126,8 @@ MouselabMDP = class MouselabMDP {
     var blockName, centerMessage, leftMessage, lowerMessage, prompt, rightMessage, size, trial_id;
     this.runDemo = this.runDemo.bind(this);
     this.startTimer = this.startTimer.bind(this);
+    this.resetClickTimer = this.resetClickTimer.bind(this);
+    this.endClickTimer = this.endClickTimer.bind(this);
     // ---------- Responding to user input ---------- #
 
     // Called when a valid action is initiated via a key press.
@@ -215,7 +217,7 @@ MouselabMDP = class MouselabMDP {
     this.checkFinished = this.checkFinished.bind(this);
     ({jsPsych: this.jsPsych, display: this.display, graph: this.graph, layout: this.layout, initial: this.initial, stateLabels: this.stateLabels = 'reward', stateHoverLabels: this.stateHoverLabels = 'num_counts', stateDisplay: this.stateDisplay = 'hover', stateClickCost: this.stateClickCost = function() { // html display element // defines transition and reward functions // defines position of states // initial state of player // object mapping from state names to labels // one of 'never', 'hover', 'click', 'always'
         return 0; // subtracted from score every time a state is clicked
-      }, edgeLabels: this.edgeLabels = 'never', edgeDisplay: this.edgeDisplay = 'always', edgeClickCost: this.edgeClickCost = 0, stateRewards: this.stateRewards = null, clickDelay: this.clickDelay = 0, stateResetMs: this.stateResetMs = null, moveDelay: this.moveDelay = 500, clickClicks: this.clickClicks = 1, displayClicksLeft: this.displayClicksLeft = false, clickEnergy: this.clickEnergy = 0, moveEnergy: this.moveEnergy = 0, startScore: this.startScore = 0, no_add: this.no_add = false, forbidReclick: this.forbidReclick = false, revealOnArrive: this.revealOnArrive = true, highlightClicked: this.highlightClicked = false, scoreShift: this.scoreShift = 0, actions: this.actions = null, demoStates: this.demoStates = null, clicks: this.clicks = null, pid: this.pid = null, allowSimulation: this.allowSimulation = false, revealRewards: this.revealRewards = true, training: this.training = false, special: this.special = '', timeLimit: this.timeLimit = null, minTime: this.minTime = null, energyLimit: this.energyLimit = null, clickLimit: this.clickLimit = null, withholdReward: this.withholdReward = false, accumulateReward: this.accumulateReward = false, revealed_states: this.revealed_states = [], clicked_states: this.clicked_states = [], wait_for_click: this.wait_for_click = false, waiting: this.waiting = this.wait_for_click, stateBorder: this.stateBorder = function() { // object mapping from edge names (s0 + '__' + s1) to labels // one of 'never', 'hover', 'click', 'always' // subtracted from score every time an edge is clicked
+      }, edgeLabels: this.edgeLabels = 'never', edgeDisplay: this.edgeDisplay = 'always', edgeClickCost: this.edgeClickCost = 0, stateRewards: this.stateRewards = null, clickDelay: this.clickDelay = 0, stateResetMs: this.stateResetMs = null, moveDelay: this.moveDelay = 500, clickClicks: this.clickClicks = 1, displayClicksLeft: this.displayClicksLeft = false, clickEnergy: this.clickEnergy = 0, moveEnergy: this.moveEnergy = 0, startScore: this.startScore = 0, no_add: this.no_add = false, forbidReclick: this.forbidReclick = false, revealOnArrive: this.revealOnArrive = true, highlightClicked: this.highlightClicked = false, scoreShift: this.scoreShift = 0, actions: this.actions = null, demoStates: this.demoStates = null, clicks: this.clicks = null, pid: this.pid = null, allowSimulation: this.allowSimulation = false, revealRewards: this.revealRewards = true, training: this.training = false, special: this.special = '', timeLimit: this.timeLimit = null, minTime: this.minTime = null, energyLimit: this.energyLimit = null, clickLimit: this.clickLimit = null, withholdReward: this.withholdReward = false, accumulateReward: this.accumulateReward = false, nextClickTimeLimit: this.nextClickTimeLimit = null, revealed_states: this.revealed_states = [], clicked_states: this.clicked_states = [], wait_for_click: this.wait_for_click = false, waiting: this.waiting = this.wait_for_click, stateBorder: this.stateBorder = function() { // object mapping from edge names (s0 + '__' + s1) to labels // one of 'never', 'hover', 'click', 'always' // subtracted from score every time an edge is clicked
         return '#bbbbbb'; // default border is same color as node
       // num clicks needed for reveal
       }, num_trials: this.num_trials = null, trialCount: this.trialCount = null, num_clicks_accrued: this.num_clicks_accrued = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], num_clicks_needed: this.num_clicks_needed = this.num_clicks_accrued, colorInterpolation: this.colorInterpolation = function() { //[0,1,2,3,3,1,2,3,3,1,2,3,3]
@@ -244,13 +246,16 @@ MouselabMDP = class MouselabMDP {
     if (typeof this.stateRewards === "function") {
       this.stateRewards = this.stateRewards();
     }
-    console.log(typeof this.stateRewards);
-    console.log(this.stateRewards);
     if (this.stateLabels === 'reward') {
       this.stateLabels = this.stateRewards;
     }
     this.stateLabels[0] = '';
-    console.log(this.stateLabels);
+    this.clickTimer = {
+      stop: function() {
+        console.log("Dummy stop");
+      }
+    };
+    this.clickTimeRanOut = false;
     if (this.energyLimit) {
       leftMessage = 'Energy: <b><span id=mouselab-energy/></b>';
     // if not @_block.energyLeft?
@@ -380,6 +385,12 @@ MouselabMDP = class MouselabMDP {
     // html: """Please wait <span id='mdp-time'></span> seconds"""
     }).appendTo(this.display);
     this.waitMessage.hide();
+    this.clickTimerMessage = $('<div>', {
+      id: 'mouselab-clicktimer-msg',
+      class: 'mouselab-msg-bottom'
+    // html: """Please wait <span id='mdp-time'></span> seconds"""
+    }).appendTo(this.display);
+    this.clickTimerMessage.hide();
     this.defaultLowerMessage = lowerMessage;
     mdp = this;
     LOG_DEBUG('new MouselabMDP', this);
@@ -445,6 +456,36 @@ MouselabMDP = class MouselabMDP {
     });
     $('#mdp-time').html(this.timeLeft);
     return $('#mdp-time').css('color', redGreen(-this.timeLeft + .1));
+  }
+
+  resetClickTimer() {
+    this.clickTimeLeft = this.nextClickTimeLimit;
+    console.log("Click timer reset " + this.clickTimeLeft);
+    // @waitMessage.html "Please wait #{@timeLeft} seconds"
+    this.clickTimer.stop();
+    this.clickTimerMessage.show();
+    this.clickTimerMessage.html(`You have <b>${this.clickTimeLeft} seconds</b> to make the next click.`);
+    return this.clickTimer = ifvisible.onEvery(1, () => {
+      // if @freeze then return
+      console.log("Timer time left " + this.clickTimeLeft);
+      this.clickTimeLeft -= 1;
+      this.clickTimerMessage.html(`You have <b>${this.clickTimeLeft} seconds</b> to make the next click.`);
+      if (this.clickTimeLeft === 0) {
+        // Set the message to movement
+        console.log("Timer ran out");
+        this.clickTimeRanOut = true;
+        this.clickTimer.stop();
+        this.clickTimerMessage.hide();
+        return this.lowerMessage.html("You ran out of time to make clicks!<br>Use the arrow keys to move.");
+      }
+    });
+  }
+
+  endClickTimer() {
+    console.log("Click timer end ");
+    // @waitMessage.html "Please wait #{@timeLeft} seconds"
+    this.clickTimer.stop();
+    return this.clickTimerMessage.hide();
   }
 
   endBlock() {
@@ -536,6 +577,9 @@ Press <code>space</code> to return to your corporeal form.`);
 
   move(s0, a, s1) {
     var i, len, nClick, newTop, notEnoughClicks, r, ref, s1g, state;
+    if (!this.moved && this.nextClickTimeLimit) {
+      this.endClickTimer();
+    }
     this.moved = true;
     ref = Object.values(this.states);
     for (i = 0, len = ref.length; i < len; i++) {
@@ -584,15 +628,24 @@ Press <code>space</code> to return to your corporeal form.`);
       this.updateDisplay();
       this.arrive(this.initial);
       if (this.timeLimit || this.minTime) {
+        console.log("" + this.timeLimit + " " + this.minTime);
         this.startTimer();
       }
       this.lowerMessage.html(this.defaultLowerMessage);
       LOG_DEBUG(`clickState ${s}`);
+      if (this.nextClickTimeLimit) {
+        this.resetClickTimer();
+      }
     }
     if (this.waiting || this.clicksLeft <= 0) {
       return;
     }
     if (this.complete || (`${s}` === `${this.initial}`) || this.freeze) {
+      return;
+    }
+    if (this.clickTimeRanOut) {
+      this.lowerMessage.html("<b>You can't use the node inspector after time has run out!</b><br>Use the arrow keys to move.");
+      this.lowerMessage.css('color', '#FC4754');
       return;
     }
     if (this.moved) {
@@ -625,7 +678,7 @@ Press <code>space</code> to return to your corporeal form.`);
       if (this.clickDelay) {
         this.freeze = true;
         g.setLabel('...');
-        return delay(this.clickDelay, () => {
+        delay(this.clickDelay, () => {
           this.freeze = false;
           g.setLabel(r);
           this.canvas.renderAll();
@@ -639,12 +692,15 @@ Press <code>space</code> to return to your corporeal form.`);
       } else {
         g.setLabel(r);
         if (this.stateResetMs) {
-          return delay(this.stateResetMs, () => {
+          delay(this.stateResetMs, () => {
             g.setLabel('');
             return this.canvas.renderAll();
           });
         }
       }
+    }
+    if (this.nextClickTimeLimit) {
+      return this.resetClickTimer();
     }
   }
 

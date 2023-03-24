@@ -141,6 +141,7 @@ class MouselabMDP
       @clickLimit=null
       @withholdReward=false
       @accumulateReward=false
+      @nextClickTimeLimit=null
 
       @revealed_states=[]
       @clicked_states=[]
@@ -186,12 +187,17 @@ class MouselabMDP
     checkObj this
     if typeof @stateRewards == "function"
       @stateRewards = @stateRewards()
-    console.log(typeof @stateRewards)
-    console.log(@stateRewards)
+
     if @stateLabels is 'reward'
       @stateLabels = @stateRewards
     @stateLabels[0] = ''
-    console.log(@stateLabels)
+
+    @clickTimer =
+      stop: ->
+        console.log("Dummy stop")
+        return
+    @clickTimeRanOut = false
+
     if @energyLimit
       leftMessage = 'Energy: <b><span id=mouselab-energy/></b>'
       # if not @_block.energyLeft?
@@ -301,6 +307,14 @@ class MouselabMDP
     ).appendTo @display
 
     @waitMessage.hide()
+
+    @clickTimerMessage = $('<div>',
+      id: 'mouselab-clicktimer-msg'
+      class: 'mouselab-msg-bottom'
+      # html: """Please wait <span id='mdp-time'></span> seconds"""
+    ).appendTo @display
+
+    @clickTimerMessage.hide()
     @defaultLowerMessage = lowerMessage
 
     mdp = this
@@ -348,6 +362,31 @@ class MouselabMDP
 
     $('#mdp-time').html @timeLeft
     $('#mdp-time').css 'color', (redGreen (-@timeLeft + .1))
+  resetClickTimer: =>
+    @clickTimeLeft = @nextClickTimeLimit
+    console.log("Click timer reset " + @clickTimeLeft)
+    # @waitMessage.html "Please wait #{@timeLeft} seconds"
+    @clickTimer.stop()
+    @clickTimerMessage.show()
+    @clickTimerMessage.html "You have <b>#{@clickTimeLeft} seconds</b> to make the next click."
+    @clickTimer = ifvisible.onEvery 1, =>
+      # if @freeze then return
+      console.log("Timer time left " + @clickTimeLeft)
+      @clickTimeLeft -= 1
+      @clickTimerMessage.html "You have <b>#{@clickTimeLeft} seconds</b> to make the next click."
+
+      if @clickTimeLeft is 0
+        # Set the message to movement
+        console.log "Timer ran out"
+        @clickTimeRanOut = true
+        @clickTimer.stop()
+        @clickTimerMessage.hide()
+        @lowerMessage.html "You ran out of time to make clicks!<br>Use the arrow keys to move."
+  endClickTimer: =>
+    console.log("Click timer end ")
+    # @waitMessage.html "Please wait #{@timeLeft} seconds"
+    @clickTimer.stop()
+    @clickTimerMessage.hide()
 
   endBlock: () ->
     @blockOver = true
@@ -429,6 +468,8 @@ class MouselabMDP
       @graph[s0][a]
 
   move: (s0, a, s1) =>
+    if not @moved and @nextClickTimeLimit
+      @endClickTimer()
     @moved = true
     for state in  Object.values(@states)
         state.setHoverLabel ''
@@ -463,15 +504,18 @@ class MouselabMDP
 
   clickState: (g, s) =>
     LOG_DEBUG "clickState #{s}"
+
     if @waiting and ("#{s}" is "#{@initial}")
       @waiting = false
       @updateDisplay()
       @arrive @initial
       if @timeLimit or @minTime
+        console.log "" + @timeLimit + " " + @minTime
         do @startTimer
       @lowerMessage.html @defaultLowerMessage
       LOG_DEBUG "clickState #{s}"
-
+      if @nextClickTimeLimit
+        @resetClickTimer()
 
     if @waiting or @clicksLeft <= 0
       return
@@ -479,6 +523,10 @@ class MouselabMDP
     if @complete or ("#{s}" is "#{@initial}") or @freeze
       return
 
+    if @clickTimeRanOut
+      @lowerMessage.html "<b>You can't use the node inspector after time has run out!</b><br>Use the arrow keys to move."
+      @lowerMessage.css 'color', '#FC4754'
+      return
     if @moved
       @lowerMessage.html "<b>You can't use the node inspector after moving!</b>"
       @lowerMessage.css 'color', '#FC4754'
@@ -522,6 +570,10 @@ class MouselabMDP
           delay @stateResetMs, =>
             g.setLabel ''
             @canvas.renderAll()
+
+    if @nextClickTimeLimit
+      @resetClickTimer()
+
 
   mouseoverState: (g, s) =>
     if @waiting or g.label.text or @moved
