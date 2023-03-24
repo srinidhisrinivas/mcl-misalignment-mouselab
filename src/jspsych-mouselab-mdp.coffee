@@ -112,6 +112,7 @@ class MouselabMDP
       @stateRewards=null
 
       @clickDelay=0
+      @stateResetMs=null
       @moveDelay=500
       @clickClicks=1
       @displayClicksLeft = false
@@ -119,6 +120,9 @@ class MouselabMDP
       @moveEnergy=0
       @startScore=0
       @no_add = false
+      @forbidReclick = false
+      @revealOnArrive = true
+      @highlightClicked = false
 
       @scoreShift=0
 
@@ -139,6 +143,7 @@ class MouselabMDP
       @accumulateReward=false
 
       @revealed_states=[]
+      @clicked_states=[]
       @wait_for_click= false
       @waiting=@wait_for_click
       @stateBorder = () -> '#bbbbbb'  # default border is same color as node
@@ -179,11 +184,14 @@ class MouselabMDP
 
     _.extend this, config
     checkObj this
-
+    if typeof @stateRewards == "function"
+      @stateRewards = @stateRewards()
+    console.log(typeof @stateRewards)
+    console.log(@stateRewards)
     if @stateLabels is 'reward'
       @stateLabels = @stateRewards
     @stateLabels[0] = ''
-
+    console.log(@stateLabels)
     if @energyLimit
       leftMessage = 'Energy: <b><span id=mouselab-energy/></b>'
       # if not @_block.energyLeft?
@@ -198,6 +206,7 @@ class MouselabMDP
 
     @data =
       revealed_states: @revealed_states
+      clicked_states: @clicked_states
       num_clicks_accrued: @num_clicks_accrued
       stateRewards: @stateRewards
       withholdReward: @withholdReward
@@ -487,12 +496,15 @@ class MouselabMDP
       @lowerMessage.html '<b>Nice job! You can click on more nodes or start moving.</b>'
       @lowerMessage.css 'color', '#000'
 
-    if @stateLabels and @stateDisplay is 'click' and not g.label.text
+    if @stateLabels and @stateDisplay is 'click' and not (@clicked_states.includes(s) and @forbidReclick)
       @addScore -@stateClickCost("#{s}").toFixed(2), false
       @recordQuery 'click', 'state', s
       # @spendEnergy @clickEnergy
       @spendClicks @clickClicks
       r = @stateLabels[s]
+      @clicked_states.push s
+      if @highlightClicked
+        g.setBorder "#000000", 3
       if @clickDelay
         @freeze = true
         g.setLabel '...'
@@ -500,7 +512,16 @@ class MouselabMDP
           @freeze = false
           g.setLabel r
           @canvas.renderAll()
-      else g.setLabel r
+          if @stateResetMs
+            delay @stateResetMs, =>
+              g.setLabel ''
+              @canvas.renderAll()
+      else
+        g.setLabel r
+        if @stateResetMs
+          delay @stateResetMs, =>
+            g.setLabel ''
+            @canvas.renderAll()
 
   mouseoverState: (g, s) =>
     if @waiting or g.label.text or @moved
@@ -553,7 +574,8 @@ class MouselabMDP
   arrive: (s, repeat=false) =>
     g = @states[s]
     g.setFill @colorInterpolation(0,0)
-    #g.setLabel @stateRewards[s]
+    if @revealOnArrive
+      g.setLabel @stateRewards[s]
     g.setHoverLabel ''
     @canvas.renderAll()
     @freeze = false
@@ -888,6 +910,11 @@ class State
       @label.setText ''
     @dirty = true
 
+  resetLabel: () ->
+    console.log("Calling reset label: " + Date.now())
+    @label.setText ''
+    @label.setFill (redGreen '', true)
+
   setHoverLabel: (txt, conf={}) ->
     {
       pre=''
@@ -907,9 +934,9 @@ class State
     @dirty = true
 
 
-  setBorder: (col, conf={}) ->
+  setBorder: (col, width=3) ->
     LOG_DEBUG 'setBorder', col
-    @circle.set { hasBorder: true,  stroke: col, strokeWidth: 3, }
+    @circle.set { hasBorder: true,  stroke: col, strokeWidth: width }
     @dirty = true
 
 

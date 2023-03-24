@@ -2804,6 +2804,9 @@ var jsPsychModule = (function (exports) {
             return this.timeline.activeID();
         }
         timelineVariable(varname, immediate = false) {
+            // console.log(varname)
+            // console.log(this.timeline)
+            // console.log(this.timeline.timelineVariable(varname))
             if (this.internal.call_immediate || immediate === true) {
                 return this.timeline.timelineVariable(varname);
             }
