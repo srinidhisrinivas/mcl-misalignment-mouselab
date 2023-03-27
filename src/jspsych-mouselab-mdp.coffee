@@ -194,7 +194,6 @@ class MouselabMDP
 
     @clickTimer =
       stop: ->
-        console.log("Dummy stop")
         return
     @clickTimeRanOut = false
 
@@ -364,26 +363,22 @@ class MouselabMDP
     $('#mdp-time').css 'color', (redGreen (-@timeLeft + .1))
   resetClickTimer: =>
     @clickTimeLeft = @nextClickTimeLimit
-    console.log("Click timer reset " + @clickTimeLeft)
     # @waitMessage.html "Please wait #{@timeLeft} seconds"
     @clickTimer.stop()
     @clickTimerMessage.show()
-    @clickTimerMessage.html "You have <b>#{@clickTimeLeft} seconds</b> to make the next click."
+    @clickTimerMessage.html "You have <b>#{@clickTimeLeft} seconds</b> to make the next click.<br>Move with the arrow keys when done inspecting nodes."
     @clickTimer = ifvisible.onEvery 1, =>
       # if @freeze then return
-      console.log("Timer time left " + @clickTimeLeft)
       @clickTimeLeft -= 1
-      @clickTimerMessage.html "You have <b>#{@clickTimeLeft} seconds</b> to make the next click."
+      @clickTimerMessage.html "You have <b>#{@clickTimeLeft} seconds</b> to make the next click.<br>Move with the arrow keys when done inspecting nodes."
 
       if @clickTimeLeft is 0
         # Set the message to movement
-        console.log "Timer ran out"
         @clickTimeRanOut = true
         @clickTimer.stop()
         @clickTimerMessage.hide()
         @lowerMessage.html "You ran out of time to make clicks!<br>Use the arrow keys to move."
   endClickTimer: =>
-    console.log("Click timer end ")
     # @waitMessage.html "Please wait #{@timeLeft} seconds"
     @clickTimer.stop()
     @clickTimerMessage.hide()
@@ -961,11 +956,6 @@ class State
     else
       @label.setText ''
     @dirty = true
-
-  resetLabel: () ->
-    console.log("Calling reset label: " + Date.now())
-    @label.setText ''
-    @label.setFill (redGreen '', true)
 
   setHoverLabel: (txt, conf={}) ->
     {

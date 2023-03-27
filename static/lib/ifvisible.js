@@ -288,13 +288,11 @@
               return callback();
             }
           }, seconds * 1000);
-          console.log("Interval set")
-          console.log(t)
+
         }
         return {
           stop: function() {
-            console.log("Stopping timer")
-            console.log(t)
+
             return clearInterval(t);
           },
           pause: function() {

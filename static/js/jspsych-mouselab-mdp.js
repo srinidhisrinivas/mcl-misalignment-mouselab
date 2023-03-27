@@ -251,9 +251,7 @@ MouselabMDP = class MouselabMDP {
     }
     this.stateLabels[0] = '';
     this.clickTimer = {
-      stop: function() {
-        console.log("Dummy stop");
-      }
+      stop: function() {}
     };
     this.clickTimeRanOut = false;
     if (this.energyLimit) {
@@ -460,19 +458,16 @@ MouselabMDP = class MouselabMDP {
 
   resetClickTimer() {
     this.clickTimeLeft = this.nextClickTimeLimit;
-    console.log("Click timer reset " + this.clickTimeLeft);
     // @waitMessage.html "Please wait #{@timeLeft} seconds"
     this.clickTimer.stop();
     this.clickTimerMessage.show();
-    this.clickTimerMessage.html(`You have <b>${this.clickTimeLeft} seconds</b> to make the next click.`);
+    this.clickTimerMessage.html(`You have <b>${this.clickTimeLeft} seconds</b> to make the next click.<br>Move with the arrow keys when done inspecting nodes.`);
     return this.clickTimer = ifvisible.onEvery(1, () => {
       // if @freeze then return
-      console.log("Timer time left " + this.clickTimeLeft);
       this.clickTimeLeft -= 1;
-      this.clickTimerMessage.html(`You have <b>${this.clickTimeLeft} seconds</b> to make the next click.`);
+      this.clickTimerMessage.html(`You have <b>${this.clickTimeLeft} seconds</b> to make the next click.<br>Move with the arrow keys when done inspecting nodes.`);
       if (this.clickTimeLeft === 0) {
         // Set the message to movement
-        console.log("Timer ran out");
         this.clickTimeRanOut = true;
         this.clickTimer.stop();
         this.clickTimerMessage.hide();
@@ -482,7 +477,6 @@ MouselabMDP = class MouselabMDP {
   }
 
   endClickTimer() {
-    console.log("Click timer end ");
     // @waitMessage.html "Please wait #{@timeLeft} seconds"
     this.clickTimer.stop();
     return this.clickTimerMessage.hide();
@@ -1108,12 +1102,6 @@ State = class State {
       this.label.setText('');
     }
     return this.dirty = true;
-  }
-
-  resetLabel() {
-    console.log("Calling reset label: " + Date.now());
-    this.label.setText('');
-    return this.label.setFill(redGreen('', true));
   }
 
   setHoverLabel(txt, conf = {}) {

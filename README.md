@@ -43,8 +43,4 @@ TODO: Add link to paper
 
 Code versions:
 
-`mcl_scarcity_final_v2.2` - Third round of data collection of the final version of the experiment (100 participants)
-`mcl_scarcity_final_v2.1` - Second round of data collection of the final version of the experiment (60 participants)
-`mcl_scarcity_final_v2.0` - First round of data collection of the final version of the experiment (40 participants)
-`mcl_scarcity_final_v1.0` - Test run of unrewarded trials equally distributed over blocks
-`mcl_scarcity_final_v0.0` - First test run of final version of experiment
+`mcl-planning-0.0` - first inofficial hosting of 
