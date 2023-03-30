@@ -23,7 +23,7 @@ X X X X X X X X X X X X X X X X X`);
 # =============================== #`);
   CONDITION = parseInt(condition);
   // TODO: Remove this before full launch
-  CONDITION = 0;
+  CONDITION = 1;
   console.log(condition);
 }
 
@@ -86,6 +86,7 @@ BONUS_RATE = .002;
 if (DEBUG) {
   NUM_TRIALS = 3;
 } else {
+  // TODO: Update this
   NUM_TRIALS = 5;
 }
 

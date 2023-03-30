@@ -68,6 +68,7 @@ BONUS_RATE = .002
 if DEBUG
   NUM_TRIALS = 3
 else
+  # TODO: Update this
   NUM_TRIALS = 5
 
 NUM_TUTORIAL_TRIALS = 2
