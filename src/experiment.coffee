@@ -28,7 +28,7 @@ else
   CONDITION = parseInt condition
 
   # TODO: Remove this before full launch
-  CONDITION = 0
+  CONDITION = 1
   console.log condition
   # mcl_scarcity_length_pilot_v2.1
 
