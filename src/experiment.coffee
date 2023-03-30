@@ -1,7 +1,7 @@
 # coffeelint: disable=max_line_length, indentation
 
 DEBUG = false
-DEBUG_INSTRUCTIONS = false
+DEBUG_INSTRUCTIONS = true
 DEBUG_SUBMIT = no
 TALK = no
 
@@ -15,7 +15,7 @@ if DEBUG
   X X X X X X X X X X X X X X X X X
   """
   CONDITION = parseInt condition
-  CONDITION = 1
+  CONDITION = 0
   console.log condition
 
 
@@ -26,6 +26,9 @@ else
   # =============================== #
   """
   CONDITION = parseInt condition
+
+  # TODO: Remove this before full launch
+  CONDITION = 0
   console.log condition
   # mcl_scarcity_length_pilot_v2.1
 
@@ -131,11 +134,11 @@ jsPsych = initJsPsych(
 psiturk = new PsiTurk uniqueId, adServerLoc, mode
 
 console.log psiturk.taskdata
-workerId = psiturk.taskdata.attributes.workerId
+hitId = psiturk.taskdata.attributes.hitId
 
-if workerId.includes "TestCond0"
+if hitId.includes "TestCond0"
   CONDITION = 0
-else if workerId.includes "TestCond1"
+else if hitId.includes "TestCond1"
   CONDITION = 1
 
 saveData = ->
