@@ -498,6 +498,7 @@ class MouselabMDP
         @arrive s1
 
   clickState: (g, s) =>
+    console.log "clickState #{s} " + Date.now()
     LOG_DEBUG "clickState #{s}"
 
     if @waiting and ("#{s}" is "#{@initial}")
@@ -538,6 +539,9 @@ class MouselabMDP
     if @special is 'trainClickBlock' and @data.queries.click.state.target.length == 2
       @lowerMessage.html '<b>Nice job! You can click on more nodes or start moving.</b>'
       @lowerMessage.css 'color', '#000'
+
+    if (@clicked_states.includes(s) and @forbidReclick)
+      return
 
     if @stateLabels and @stateDisplay is 'click' and not (@clicked_states.includes(s) and @forbidReclick)
       @addScore -@stateClickCost("#{s}").toFixed(2), false

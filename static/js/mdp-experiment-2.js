@@ -159,7 +159,7 @@ initializeExperiment = function() {
           return COST;
         },
         stateDisplay: 'click',
-        stateResetMs: 2000,
+        stateResetMs: 5000,
         accumulateReward: true,
         wait_for_click: true,
         withholdReward: false,

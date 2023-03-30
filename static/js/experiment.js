@@ -4,7 +4,7 @@ var BLOCKS, BONUS, BONUS_RATE, CLICK_TIME_ANSWERS, CLICK_TIME_CORRECT, CONDITION
 
 DEBUG = false;
 
-DEBUG_INSTRUCTIONS = true;
+DEBUG_INSTRUCTIONS = false;
 
 DEBUG_SUBMIT = false;
 
@@ -180,9 +180,9 @@ console.log(psiturk.taskdata);
 
 workerId = psiturk.taskdata.attributes.workerId;
 
-if (workerId === "testCond0") {
+if (workerId.includes("TestCond0")) {
   CONDITION = 0;
-} else if (workerId === "testCond1") {
+} else if (workerId.includes("TestCond1")) {
   CONDITION = 1;
 }
 
@@ -327,7 +327,7 @@ createStartButton = function() {
 
 // Setting up the jsPsych experiment
 initializeExperiment = function() {
-  var combinedTimelineVariables, demographics, experiment_timeline, finish, finish_fail, fullscreen, i, if_node1, k, mdp_trials, minimumTime, numSeqTrials, prompt_resubmit, ready_screen, ref, reprompt, save_data, secret_code_trial, stimulus_template, task_disappearing_timed, task_memory, tv;
+  var combinedTimelineVariables, demographics, experiment_timeline, finish, finish_fail, fullscreen, i, if_node1, k, mdp_trials, minimumTime, numSeqTrials, prompt_resubmit, ready_screen, ref, reprompt, save_data, secret_code_trial, self_report, stimulus_template, task_disappearing_timed, task_memory, tv;
   $('#jspsych-target').html('');
   //  ============================== #
   //  ========= EXPERIMENT ========= #
@@ -411,7 +411,7 @@ If you complete the entire experiment, you will receive a bonus payment for your
 
  In the <em>Web of Cash</em> game you will guide a money-loving spider through a spider web. Your goal is to travel from the start of the web to the end of the web in three moves.
  <br><br>
- On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web.
+ On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web. The spider starts at the node in the middle of the web, and must be moved to any one of the six nodes at the edge of the web, which are three steps away from the starting node.
 
  Each of these nodes has a certain value, and <strong>the money collected from the nodes that you pass through from start to finish contribute to your score for that round.</strong> Once you finish a round, the score for that round will be displayed.
 
@@ -441,20 +441,15 @@ node. Once you start moving, you can no longer inspect any nodes.
 <img class='display' style="width:50%; height:auto" src='static/images/web-of-cash-timed.png'/>
 
 `,
-        `<h1> <em>Web of Cash</em> (2/3) - Rewards and Costs </h1>
-<div style="text-align: left">
-<li>You can find out about a node's loss or reward by using the node inspector, which costs <strong>$${COST} per revealed node.</strong></li>
-<li>In each round, you can see the score for that round in the top right corner.</li>
-<li>At the end of the round, you will be told what your score for that round is.</li>
-</div>
-`,
-        `<h1> Additional Information </h1>
+        `<h1> Web of Cash</em> (2/3) - Rewards and Costs </h1>
 
 <img class='display' style="width:50%; height:auto" src='static/images/web-of-cash.png'/>
 <div style="text-align: left">
 <li>You will be able to use the node inspector in each round.</li>
 <li>You will have to click on the starting node before a round starts.</li>
 <li>The timer to make the first click will begin as soon as you click on the starting node.</li>
+<li>In each round, you can see the score for that round in the top right corner.</li>
+<li>At the end of the round, you will be told what your score for that round is.</li>
 </div>`,
         `<h1> Practice Rounds </h1>
 <div style='text-align: left;'>
@@ -487,7 +482,7 @@ Click 'Next' to start with the practice rounds.`
 
  In the <em>Web of Cash</em> game you will guide a money-loving spider through a spider web. Your goal is to travel from the start of the web to the end of the web in three moves.
  <br><br>
- On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web.
+ On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web. The spider starts at the node in the middle of the web, and must be moved to any one of the six nodes at the edge of the web, which are three steps away from the starting node.
 
  Each of these nodes has a certain value, and <strong>the money collected from the nodes that you pass through from start to finish contribute to your score for that round.</strong> Once you finish a round, the score for that round will be displayed.
 
@@ -517,18 +512,12 @@ node. Once you start moving, you can no longer inspect any nodes.
 `,
         `<h1> <em>Web of Cash</em> (2/4) - Rewards and Costs </h1>
 <div style="text-align: left">
-<li>You can find out about a node's loss or reward by using the node inspector, which costs <strong>$${COST} per revealed node.</strong></li>
+<li>You will be able to use the node inspector in each round.</li>
+<li>You will have to click on the starting node before a round starts.</li>
 <li>In each round, you can see the score for that round in the top right corner.</li>
 <li>At the end of the round, you will be told what your score for that round is.</li>
 </div>
 `,
-        `<h1> Additional Information </h1>
-
-<img class='display' style="width:50%; height:auto" src='static/images/web-of-cash.png'/>
-<div style="text-align: left">
-<li>You will be able to use the node inspector in each round.</li>
-<li>You will have to click on the starting node before a round starts.</li>
-</div>`,
         `<h1> Practice Rounds </h1>
 <br><br>
 <div style='text-align: left;'>
@@ -629,20 +618,10 @@ Move with the arrow keys after you are done clicking.`,
     show_clickable_nav: true,
     pages: function() {
       return [
-        `<h1> <em>Web of Cash</em> (3/3) - Rewards and Costs </h1>
+        `<h1> <em>Web of Cash</em> (3/3) - Actual Game </h1>
 Now that you understand how the node inspector works from the practice rounds, here is what you need to know about the actual rounds of the game that count:
 <br><br>
 <div style="text-align: left">
-
-
-<li>You can find out about a node's loss or reward by using the node inspector, which costs <strong>$${COST} per revealed node, and this reward will be visible for ${TIME_NODE_REVEAL} seconds.</strong></li>
-<li>In each round, you can see the score for that round in the top right corner.</li>
-<li>At the end of each round, you will be told what your score for that round is.</li>
-<li>At the end of the game, you will be told what your score for the whole game is.</li>
-<li>The higher your score at the end of the game, the bigger your bonus will be!</li>
-</div>
-`,
-        `<h1> Additional Information </h1>
 
 <img class='display' style="width:50%; height:auto" src='static/images/web-of-cash.png'/>
 <div style="text-align: left">
@@ -652,6 +631,9 @@ Now that you understand how the node inspector works from the practice rounds, h
 <li><strong>You must spend <em>at least</em> ${PARAMS.MIN_TIME} seconds on each round.</strong> If you finish a round early, you'll have to wait until ${PARAMS.MIN_TIME} seconds have
     passed (before being able to move on).</li>
 <li>For each round of the game, the rewards on the web will be different. So, you have to make a new plan every time.</li>
+<li>At the end of each round, you will be told what your score for that round is.</li>
+<li>At the end of the game, you will be told what your score for the whole game is.</li>
+<li>The higher your score at the end of the game, the bigger your bonus will be!</li>
 </div>`,
         `<h1> Quiz </h1>
 
@@ -684,28 +666,22 @@ Your performance on the memory task will contribute to the bonus that you receiv
 For example, if you score 70% on the memory task, you will only receive 70% of the bonus you earned from your performance in the <i>Web of Cash</i> game.
 </div>
 <img class='display' style="width:50%; height:auto" src='static/images/memory-task.jpeg'/>`,
-        `<h1> <em>Web of Cash</em> (4/4) - Rewards and Costs </h1>
+        `<h1> <em>Web of Cash</em> (4/4) - Actual Game </h1>
 Now that you understand how the node inspector works from the practice rounds, here is what you need to know about the actual rounds of the game that count:
 <br><br>
 <div style="text-align: left">
 
-<li>You can find out about a node's loss or reward by using the node inspector, which costs <strong>$${COST} per revealed node.</strong></li>
+<li>You will be able to use the node inspector in each round.</li>
+<li>You will have to click on the starting node before a round starts.</li>
+<li><strong>You must spend <em>at least</em> ${PARAMS.MIN_TIME} seconds on each round of the Web of Cash game.</strong> If you finish a round early, you'll have to wait until ${PARAMS.MIN_TIME} seconds have
+    passed (before being able to move on).</li>
+<li>For each round of the game, the rewards on the web will be different. So, you have to make a new plan every time.</li>
 <li>In each round, you can see the score for that round in the top right corner.</li>
 <li>At the end of each round, you will be told what your score for that round is.</li>
 <li>At the end of the game, you will be told what your score for the whole game is.</li>
 <li>The higher your score at the end of the game and the better you perform on the memory task, the bigger your bonus will be!</li>
 </div>
 `,
-        `<h1> Additional Information </h1>
-
-<img class='display' style="width:50%; height:auto" src='static/images/web-of-cash.png'/>
-<div style="text-align: left">
-<li>You will be able to use the node inspector in each round.</li>
-<li>You will have to click on the starting node before a round starts.</li>
-<li><strong>You must spend <em>at least</em> ${PARAMS.MIN_TIME} seconds on each round of the Web of Cash game.</strong> If you finish a round early, you'll have to wait until ${PARAMS.MIN_TIME} seconds have
-    passed (before being able to move on).</li>
-<li>For each round of the game, the rewards on the web will be different. So, you have to make a new plan every time.</li>
-</div>`,
         `<h1> Quiz </h1>
 
 Before you can begin playing the <em>Web of Cash</em>, you <em>must</em> pass the instructions quiz to show
@@ -897,6 +873,35 @@ You <em>must</em> pass the quiz in at most <strong>${MAX_REPETITIONS}</strong> a
     }
   };
   // Final mouselab quiz for conditions with disappearing node values
+  self_report = {
+    preamble: function() {
+      return `<h1>Self-Report on Performance</h1>
+
+Please answer the following questions about how you approached the Web of Cash game.
+`;
+    },
+    type: jsPsychSurveyText,
+    data: {
+      trial_id: "self_report_disappear"
+    },
+    questions: [
+      {
+        prompt: "What was the strategy you used in the game? Briefly describe it in a couple of sentences.",
+        required: true,
+        rows: 10
+      },
+      {
+        prompt: "Did you improve your strategy over time? If so, how did you do it?",
+        required: true,
+        rows: 10
+      },
+      {
+        prompt: "How difficult did you find it to improve your performance in the game? What made it difficult?",
+        required: true,
+        rows: 10
+      }
+    ]
+  };
   task_disappearing_timed["final_quiz"] = {
     on_start: function() {
       return SCORE = Math.round(SCORE * 100) / 100;
@@ -1125,6 +1130,7 @@ Remember, the more money the spider gets, the bigger your bonus will be!
         stateDisplay: 'click',
         accumulateReward: true,
         wait_for_click: true,
+        minTime: minimumTime,
         withholdReward: false,
         scoreShift: 2,
         stateBorder: function() {
@@ -1339,7 +1345,7 @@ Please briefly answer the questions below before you submit the HIT.`;
   // if the subject passes the quiz, they continue and can earn a bonus for their performance
   // MDP trials and end if quiz is passed
   task_disappearing_timed["if_node2"] = {
-    timeline: [ready_screen, task_disappearing_timed["test_trials"], task_disappearing_timed["final_quiz"], demographics, finish],
+    timeline: [ready_screen, task_disappearing_timed["test_trials"], task_disappearing_timed["final_quiz"], self_report, demographics, finish],
     conditional_function: function() {
       if (REPETITIONS > MAX_REPETITIONS) {
         return false;
@@ -1349,7 +1355,7 @@ Please briefly answer the questions below before you submit the HIT.`;
     }
   };
   task_memory["if_node2"] = {
-    timeline: [ready_screen, task_memory["test_trials"], task_memory["final_quiz"], demographics, finish],
+    timeline: [ready_screen, task_memory["test_trials"], task_memory["final_quiz"], self_report, demographics, finish],
     conditional_function: function() {
       if (REPETITIONS > MAX_REPETITIONS) {
         return false;

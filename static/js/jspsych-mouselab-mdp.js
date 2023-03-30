@@ -616,6 +616,7 @@ Press <code>space</code> to return to your corporeal form.`);
 
   clickState(g, s) {
     var r;
+    console.log(`clickState ${s} ` + Date.now());
     LOG_DEBUG(`clickState ${s}`);
     if (this.waiting && (`${s}` === `${this.initial}`)) {
       this.waiting = false;
@@ -658,6 +659,9 @@ Press <code>space</code> to return to your corporeal form.`);
     if (this.special === 'trainClickBlock' && this.data.queries.click.state.target.length === 2) {
       this.lowerMessage.html('<b>Nice job! You can click on more nodes or start moving.</b>');
       this.lowerMessage.css('color', '#000');
+    }
+    if (this.clicked_states.includes(s) && this.forbidReclick) {
+      return;
     }
     if (this.stateLabels && this.stateDisplay === 'click' && !(this.clicked_states.includes(s) && this.forbidReclick)) {
       this.addScore(-this.stateClickCost(`${s}`).toFixed(2), false);
