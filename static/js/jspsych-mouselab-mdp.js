@@ -246,10 +246,13 @@ MouselabMDP = class MouselabMDP {
     if (typeof this.stateRewards === "function") {
       this.stateRewards = this.stateRewards();
     }
+    //    if typeof trial_id == "function"
+    //      trial_id = trial_id()
     if (this.stateLabels === 'reward') {
       this.stateLabels = this.stateRewards;
     }
     this.stateLabels[0] = '';
+    console.log(trial_id);
     this.clickTimer = {
       stop: function() {}
     };

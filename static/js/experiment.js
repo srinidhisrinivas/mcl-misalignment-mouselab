@@ -3,7 +3,7 @@
 var BLOCKS, BONUS, BONUS_RATE, CLICK_TIME_ANSWERS, CLICK_TIME_CORRECT, CONDITION, CORRECT_SEQ_PCTG, COST, COST_ANSWERS, COST_CORRECT, COST_EXPLANATION, COST_QUESTION, DEBUG, DEBUG_INSTRUCTIONS, DEBUG_SUBMIT, INSTRUCTIONS_FAILED, MAX_AMOUNT, MAX_REPETITIONS, MIN_SEQ_PCTG, NUM_SEQUENCE_LENGTH, NUM_TRIALS, NUM_TUTORIAL_TRIALS, N_TRIAL, PARAMS, PRACTICE_TIME_NEXT_CLICK, QUESTIONNAIRES, REPETITIONS, SCORE, STRUCTURE, TALK, TIME_NEXT_CLICK, TIME_NODE_REVEAL, TRIALS, bonus_text, calculateBonus, colorInterpolation, createQuestionnaires, createStartButton, early_nodes, final_nodes, getClickCosts, getColor, getCost, getNumberSequenceTrials, getPracticeTrials, getStroopTrials, getTrials, hitId, initializeExperiment, jsPsych, numCorrectSequences, pracTrialCount, psiturk, saveData, trialCount,
   indexOf = [].indexOf;
 
-DEBUG = false;
+DEBUG = true;
 
 DEBUG_INSTRUCTIONS = false;
 

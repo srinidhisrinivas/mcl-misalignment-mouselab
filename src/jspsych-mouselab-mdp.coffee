@@ -173,6 +173,7 @@ class MouselabMDP
       lowerMessage='&nbsp;'
     } = config
 
+
     if @pid?
       @showParticipant = true
       centerMessage = switch @pid
@@ -188,10 +189,13 @@ class MouselabMDP
     if typeof @stateRewards == "function"
       @stateRewards = @stateRewards()
 
+    if typeof trial_id == "function"
+      trial_id = trial_id()
     if @stateLabels is 'reward'
       @stateLabels = @stateRewards
     @stateLabels[0] = ''
 
+    console.log(trial_id)
     @clickTimer =
       stop: ->
         return
