@@ -253,7 +253,6 @@ MouselabMDP = class MouselabMDP {
       this.stateLabels = this.stateRewards;
     }
     this.stateLabels[0] = '';
-    console.log(trial_id);
     this.clickTimer = {
       stop: function() {}
     };
@@ -620,14 +619,12 @@ Press <code>space</code> to return to your corporeal form.`);
 
   clickState(g, s) {
     var r;
-    console.log(`clickState ${s} ` + Date.now());
     LOG_DEBUG(`clickState ${s}`);
     if (this.waiting && (`${s}` === `${this.initial}`)) {
       this.waiting = false;
       this.updateDisplay();
       this.arrive(this.initial);
       if (this.timeLimit || this.minTime) {
-        console.log("" + this.timeLimit + " " + this.minTime);
         this.startTimer();
       }
       this.lowerMessage.html(this.defaultLowerMessage);

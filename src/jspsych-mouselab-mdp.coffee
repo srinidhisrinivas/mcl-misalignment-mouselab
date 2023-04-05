@@ -195,7 +195,6 @@ class MouselabMDP
       @stateLabels = @stateRewards
     @stateLabels[0] = ''
 
-    console.log(trial_id)
     @clickTimer =
       stop: ->
         return
@@ -502,7 +501,6 @@ class MouselabMDP
         @arrive s1
 
   clickState: (g, s) =>
-    console.log "clickState #{s} " + Date.now()
     LOG_DEBUG "clickState #{s}"
 
     if @waiting and ("#{s}" is "#{@initial}")
@@ -510,7 +508,6 @@ class MouselabMDP
       @updateDisplay()
       @arrive @initial
       if @timeLimit or @minTime
-        console.log "" + @timeLimit + " " + @minTime
         do @startTimer
       @lowerMessage.html @defaultLowerMessage
       LOG_DEBUG "clickState #{s}"

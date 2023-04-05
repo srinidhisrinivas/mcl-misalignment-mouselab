@@ -1,7 +1,7 @@
 # coffeelint: disable=max_line_length, indentation
 
 DEBUG = false
-DEBUG_INSTRUCTIONS = false
+DEBUG_INSTRUCTIONS = true
 DEBUG_SUBMIT = no
 TALK = no
 
@@ -15,7 +15,7 @@ if DEBUG
   X X X X X X X X X X X X X X X X X
   """
   CONDITION = parseInt condition
-  CONDITION = 1
+  CONDITION = 0
   console.log condition
 
 
@@ -26,18 +26,14 @@ else
   # =============================== #
   """
   CONDITION = parseInt condition
-
-  # TODO: Remove this before full launch
-  CONDITION = 1
   console.log condition
-  # mcl_scarcity_length_pilot_v2.1
 
 if mode is "{{ mode }}"
   CONDITION = 0
 
 # List of conditions by proportions of trials that are given explicit rewards
 COST = 1
-TIME_NEXT_CLICK = 4
+TIME_NEXT_CLICK = 3
 TIME_NODE_REVEAL = 3
 PRACTICE_TIME_NEXT_CLICK = 10
 NUM_SEQUENCE_LENGTH = 7
@@ -68,8 +64,7 @@ BONUS_RATE = .002
 if DEBUG
   NUM_TRIALS = 3
 else
-  # TODO: Update this
-  NUM_TRIALS = 5
+  NUM_TRIALS = 40
 
 NUM_TUTORIAL_TRIALS = 2
 MAX_AMOUNT = BONUS_RATE*(NUM_TRIALS*(4+8+48)+800)
@@ -133,14 +128,6 @@ jsPsych = initJsPsych(
       psiturk.saveData()
 )
 psiturk = new PsiTurk uniqueId, adServerLoc, mode
-
-console.log psiturk.taskdata
-hitId = psiturk.taskdata.attributes.hitId
-
-if hitId.includes "TestCond0"
-  CONDITION = 0
-else if hitId.includes "TestCond1"
-  CONDITION = 1
 
 saveData = ->
   new Promise (resolve, reject) ->
@@ -848,7 +835,7 @@ initializeExperiment = ->
 
           <h1> Get ready to start the game! </h1>
 
-          Thank you for reading the instructions. Get ready start with the first of #{NUM_TRIALS} rounds of this game.
+          Thank you for reading the instructions. Get ready start with the #{NUM_TRIALS} rounds of this game.
           <br><br>
           If you need to take a break, feel free to take one after the end of a round, before continuing to the next one.
           <br><br>
@@ -951,7 +938,6 @@ initializeExperiment = ->
           if(data.response.Q0.replace(/ ,;./g,"") == jsPsych.timelineVariable("correct_sequence"))
             data.correct = true;
             numCorrectSequences += 1;
-            console.log("Correct sequence:" + numCorrectSequences)
           else
             data.correct = false;
 
