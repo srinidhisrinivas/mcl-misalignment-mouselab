@@ -16,7 +16,7 @@ if (DEBUG) {
  X X X X X DEBUG  MODE X X X X X
 X X X X X X X X X X X X X X X X X`);
   CONDITION = parseInt(condition);
-  CONDITION = 0;
+  CONDITION = 1;
   console.log(condition);
 } else {
   console.log(`# =============================== #
@@ -24,7 +24,7 @@ X X X X X X X X X X X X X X X X X`);
 # =============================== #`);
   CONDITION = parseInt(condition);
   // TODO: Remove this before full launch
-  CONDITION = 0;
+  CONDITION = 1;
   console.log(condition);
 }
 
