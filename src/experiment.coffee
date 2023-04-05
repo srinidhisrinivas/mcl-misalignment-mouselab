@@ -1,7 +1,7 @@
 # coffeelint: disable=max_line_length, indentation
 
 DEBUG = false
-DEBUG_INSTRUCTIONS = true
+DEBUG_INSTRUCTIONS = false
 DEBUG_SUBMIT = no
 TALK = no
 
@@ -15,7 +15,7 @@ if DEBUG
   X X X X X X X X X X X X X X X X X
   """
   CONDITION = parseInt condition
-  CONDITION = 0
+  CONDITION = 1
   console.log condition
 
 
@@ -220,7 +220,14 @@ $(window).on 'load', ->
         sequence = []
         trialObj = {}
         for j in [0...seqLength]
-          sequence.push(Math.floor(Math.random() * 10))
+          foundNewDigit = false
+          while not foundNewDigit
+            newDigit = Math.floor(Math.random() * 10)
+            if newDigit in sequence
+              continue
+            else
+              sequence.push(newDigit)
+              foundNewDigit = true
 
         trialObj["trial_id"] = "sequence_" + (i+1)
         trialObj["stimulus"] = sequence.join(", ")
@@ -603,9 +610,9 @@ initializeExperiment = ->
         <div style="text-align: left">
         At the beginning of each round, you will be shown a sequence of #{NUM_SEQUENCE_LENGTH} digits. You are required to remember this sequence (<b>without writing it down or using any memory aids</b>) while playing the Web of Cash game, and correctly repeat the sequence after that round of the game.
         <br><br>
-        Your performance on the memory task will contribute to the bonus that you receive at the end of the game. If you remember #{MIN_SEQ_PCTG}% or more of the sequences correctly, you will receive the full bonus. If you score less than #{MIN_SEQ_PCTG}% on the memory task, then the bonus you receive will be scaled down by the fraction of correct answers you had.
+        Your performance on the memory task will contribute to the bonus that you receive at the end of the game. If you remember #{MIN_SEQ_PCTG}% or more of the sequences correctly by the end of the game, you will receive the full bonus that you scored for the Web of Cash game. If you score less than #{MIN_SEQ_PCTG}% in total on the memory task, then the total bonus you receive will be scaled down by the fraction of correct answers you had.
         <br><br>
-        For example, if you score 70% on the memory task, you will only receive 70% of the bonus you earned from your performance in the <i>Web of Cash</i> game.
+        For example, if you get 7/10 sequences correct on the memory task, you will only receive 70% of the total bonus you earned from your performance in the <i>Web of Cash</i> game.
         </div>
         <img class='display' style="width:50%; height:auto" src='static/images/memory-task.jpeg'/>
       """
@@ -797,12 +804,6 @@ initializeExperiment = ->
   task_memory["final_quiz"] =
     on_start: ->
       SCORE = Math.round(SCORE * 100) / 100
-      SCORE =
-      console.log(numCorrectSequences)
-      console.log(numCorrectSequences * 100)
-      console.log(numCorrectSequences * 100 / NUM_TRIALS)
-      console.log(Math.round(numCorrectSequences * 100 / NUM_TRIALS))
-
 
     preamble: -> """
       <h1>Quiz</h1>
@@ -963,9 +964,8 @@ initializeExperiment = ->
         }
         stimulus: () ->
           last_trial_correct = jsPsych.data.get().last(1).values()[0].correct
-          correct_filtered = jsPsych.data.get().trials.filter (trial) -> (trial.correct)
+          correct_filtered = jsPsych.data.get().trials.filter (trial) -> (("correct" of trial) and trial.correct)
           num_correct = correct_filtered.length
-          num_complete = trialCount
           num_complete = trialCount
           scoreText = """<br><br>Your current score for the sequence task is <b>#{num_correct}/#{num_complete}</b>."""
           if(last_trial_correct)
