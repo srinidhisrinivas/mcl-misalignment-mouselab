@@ -246,8 +246,9 @@ MouselabMDP = class MouselabMDP {
     if (typeof this.stateRewards === "function") {
       this.stateRewards = this.stateRewards();
     }
-    //    if typeof trial_id == "function"
-    //      trial_id = trial_id()
+    if (typeof trial_id === "function") {
+      trial_id = trial_id();
+    }
     if (this.stateLabels === 'reward') {
       this.stateLabels = this.stateRewards;
     }
