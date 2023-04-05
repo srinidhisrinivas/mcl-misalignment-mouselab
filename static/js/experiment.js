@@ -1168,10 +1168,10 @@ Move with the arrow keys after you are done clicking.`,
         on_finish: function(data) {
           if (data.response.Q0.replace(/ ,;./g,
       "") === jsPsych.timelineVariable("correct_sequence")) {
-            data.correct = true;
+            data.sequence_correct = true;
             return numCorrectSequences += 1;
           } else {
-            return data.correct = false;
+            return data.sequence_correct = false;
           }
         }
       },
@@ -1189,9 +1189,9 @@ Move with the arrow keys after you are done clicking.`,
       num_complete,
       num_correct,
       scoreText;
-          last_trial_correct = jsPsych.data.get().last(1).values()[0].correct;
+          last_trial_correct = jsPsych.data.get().last(1).values()[0].sequence_correct;
           correct_filtered = jsPsych.data.get().trials.filter(function(trial) {
-            return ("correct" in trial) && trial.correct;
+            return ("sequence_correct" in trial) && trial.sequence_correct;
           });
           num_correct = correct_filtered.length;
           num_complete = trialCount;

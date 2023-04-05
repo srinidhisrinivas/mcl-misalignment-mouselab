@@ -936,10 +936,10 @@ initializeExperiment = ->
         button_label: 'Submit',
         on_finish: (data) ->
           if(data.response.Q0.replace(/ ,;./g,"") == jsPsych.timelineVariable("correct_sequence"))
-            data.correct = true;
+            data.sequence_correct = true;
             numCorrectSequences += 1;
           else
-            data.correct = false;
+            data.sequence_correct = false;
 
       },
       {
@@ -949,8 +949,8 @@ initializeExperiment = ->
           trial_id: () -> jsPsych.timelineVariable("seq_trial_id")
         }
         stimulus: () ->
-          last_trial_correct = jsPsych.data.get().last(1).values()[0].correct
-          correct_filtered = jsPsych.data.get().trials.filter (trial) -> (("correct" of trial) and trial.correct)
+          last_trial_correct = jsPsych.data.get().last(1).values()[0].sequence_correct
+          correct_filtered = jsPsych.data.get().trials.filter (trial) -> (("sequence_correct" of trial) and trial.sequence_correct)
           num_correct = correct_filtered.length
           num_complete = trialCount
           scoreText = """<br><br>Your current score for the sequence task is <b>#{num_correct}/#{num_complete}</b>."""
