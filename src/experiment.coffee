@@ -168,8 +168,8 @@ $(window).on 'load', ->
       inspectCost: COST
       startTime: Date(Date.now())
       bonusRate: BONUS_RATE
-      variance: '2_4_24'
-      branching: '312'
+      variance: '1_2_4_8_32'
+      branching: '31123'
 
     COST_EXPLANATION = "Some nodes may require more clicks than others."
 

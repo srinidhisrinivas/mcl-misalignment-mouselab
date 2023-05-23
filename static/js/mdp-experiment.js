@@ -40,8 +40,8 @@ $(window).on('load', function() {
       MIN_TIME: 7,
       inspectCost: COST,
       startTime: Date(Date.now()),
-      variance: '2_4_24',
-      branching: '312'
+      variance: '1_2_4_8_32',
+      branching: '31123'
     };
     COST_EXPLANATION = "Some nodes may require more clicks than others.";
     COST_EXPLANATION = "Some nodes may require more clicks than others.";
@@ -50,6 +50,18 @@ $(window).on('load', function() {
     } else {
       id = `${PARAMS.branching}`;
     }
+    TRIALS = TRIALS_ALL[id];
+    STRUCTURE = STRUCTURE_ALL[id];
+
+    getTrials = function(numTrials) {
+      var finalTrials, i, k, ref, shuffledTrials;
+      shuffledTrials = _.shuffle(TRIALS);
+      finalTrials = JSON.parse(JSON.stringify(shuffledTrials.slice(0, numTrials)));
+      for (i = k = 0, ref = numTrials; (0 <= ref ? k < ref : k > ref); i = 0 <= ref ? ++k : --k) {
+        finalTrials[i].trial_id = "mdp_trial_" + (i + 1);
+      }
+      return finalTrials;
+    };
 
     getPracticeTrials = function(numTrials) {
       var idx_2, l, len, m, ref2, reward, templateTrial, trialObj, trials;
@@ -91,7 +103,7 @@ initializeExperiment = function() {
   let ready = {
     type: jsPsychHtmlKeyboardResponse,
     choices: [" "],
-    stimulus: `<h1> Get ready to start the game! </h1>`
+    stimulus: `<h1> Get ready to start the game! </h1><br><br> Press <code>space</code> to continue`
   };
   let num_trials = 5;
   let practice_trials = {
@@ -125,7 +137,7 @@ initializeExperiment = function() {
     nextClickTimeLimit: 5,
 //     lowerMessage: `Click on the nodes to reveal their values.<br>
 // Move with the arrow keys after you are done clicking.`,
-    timeline: getPracticeTrials(num_trials),
+    timeline: getTrials(num_trials),
     trialCount: function() {
       return pracTrialCount;
     },

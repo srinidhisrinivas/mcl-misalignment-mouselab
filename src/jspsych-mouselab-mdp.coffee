@@ -161,7 +161,7 @@ class MouselabMDP
       @keys=KEYS  # mapping from actions to keycodes
       @trialIndex=TRIAL_INDEX  # number of trial (starts from 1)
       @playerImage='static/images/plane.png'
-      size=80  # determines the size of states, text, etc...
+      size=70  # determines the size of states, text, etc...
 
       # leftMessage="Round: #{TRIAL_INDEX}/#{N_TRIAL}"
       trial_id=null
@@ -209,7 +209,7 @@ class MouselabMDP
       if not @clicksLeft?
         @clicksLeft = @clickLimit
     else
-      leftMessage = "<strong>Round:</strong> #{@trialCount() + 1}/#{@num_trials}"
+      leftMessage = "<strong>Round:</strong> <br> #{@trialCount() + 1}/#{@num_trials}"
       # leftMessage = "Round #{@_block.trialCount + 1}/#{@_block.timeline.length}"
 
     @data =
@@ -317,6 +317,7 @@ class MouselabMDP
     ).appendTo @display
 
     @clickTimerMessage.hide()
+    @lowerMessage.show()
     @defaultLowerMessage = lowerMessage
 
     mdp = this
@@ -369,6 +370,7 @@ class MouselabMDP
     # @waitMessage.html "Please wait #{@timeLeft} seconds"
     @clickTimer.stop()
     @clickTimerMessage.show()
+    @lowerMessage.hide()
     @clickTimerMessage.html "You have <b>#{@clickTimeLeft} seconds</b> to make the next click.<br>Move with the arrow keys when done inspecting nodes."
     @clickTimer = ifvisible.onEvery 1, =>
       # if @freeze then return
@@ -380,10 +382,12 @@ class MouselabMDP
         @clickTimeRanOut = true
         @clickTimer.stop()
         @clickTimerMessage.hide()
+        @lowerMessage.show()
         @lowerMessage.html "You ran out of time to make clicks!<br>Use the arrow keys to move."
   endClickTimer: =>
     # @waitMessage.html "Please wait #{@timeLeft} seconds"
     @clickTimer.stop()
+    @lowerMessage.show()
     @clickTimerMessage.hide()
 
   endBlock: () ->
@@ -855,14 +859,14 @@ class MouselabMDP
 
     if @displayTime
       @lowerMessage.html htmlMessage + """
-        <br><br>
+        <br>
         It took you """+ @data.displayed_time + """ seconds to get to the edge of the web!
         <br>
         <b>Press</b> <code>space</code> <b>to continue.</b>
       """
     else
       @lowerMessage.html htmlMessage + """
-        <br><br>
+        <br>
         <b>Press</b> <code>space</code> <b>to continue.</b>
       """
     $('.mouselab-score').html '$' + @data.score.toFixed(2)

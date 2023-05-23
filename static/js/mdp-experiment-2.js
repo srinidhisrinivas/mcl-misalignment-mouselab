@@ -40,16 +40,17 @@ $(window).on('load', function() {
       MIN_TIME: 7,
       inspectCost: COST,
       startTime: Date(Date.now()),
-      variance: '2_4_24',
-      branching: '312'
+      variance: '1_2_4_8_32',
+      branching: '31123'
     };
-    COST_EXPLANATION = "Some nodes may require more clicks than others.";
     COST_EXPLANATION = "Some nodes may require more clicks than others.";
     if (PARAMS.variance) {
       id = `${PARAMS.branching}_${PARAMS.variance}`;
     } else {
       id = `${PARAMS.branching}`;
     }
+    TRIALS = TRIALS_ALL[id];
+    STRUCTURE = STRUCTURE_ALL[id];
 
     getNumberSequenceTrials = function(seqLength, numTrials) {
       let trials = []
@@ -66,10 +67,20 @@ $(window).on('load', function() {
       return trials
 
     }
+    getTrials = function(numTrials) {
+      var finalTrials, i, k, ref, shuffledTrials;
+      shuffledTrials = _.shuffle(TRIALS);
+      finalTrials = JSON.parse(JSON.stringify(shuffledTrials.slice(0, numTrials)));
+      for (i = k = 0, ref = numTrials; (0 <= ref ? k < ref : k > ref); i = 0 <= ref ? ++k : --k) {
+        finalTrials[i].trial_id = "mdp_trial_" + (i + 1);
+      }
+      return finalTrials;
+    };
 
     getPracticeTrials = function(numTrials) {
       var idx_2, l, len, m, ref2, reward, templateTrial, trialObj, trials;
       templateTrial = TRIALS[0]["stateRewards"];
+
       trials = [];
       for (i = l = 0, ref2 = numTrials; (0 <= ref2 ? l < ref2 : l > ref2); i = 0 <= ref2 ? ++l : --l) {
         trialObj = {};
@@ -120,7 +131,8 @@ initializeExperiment = function() {
 
 
   let num_trials = 2;
-  let mdpTrials = getPracticeTrials(num_trials)
+  // let mdpTrials = getPracticeTrials(num_trials)
+  let mdpTrials = getTrials(num_trials)
   let numSeqTrials = getNumberSequenceTrials(5, num_trials)
   let combinedTimelineVariables = []
 

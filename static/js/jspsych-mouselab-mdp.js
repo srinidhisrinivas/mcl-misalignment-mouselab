@@ -225,7 +225,7 @@ MouselabMDP = class MouselabMDP {
       // @transition=null  # function `(s0, a, s1, r) -> null` called after each transition
       
       // leftMessage="Round: #{TRIAL_INDEX}/#{N_TRIAL}"
-      }, displayTime: this.displayTime = false, keys: this.keys = KEYS, trialIndex: this.trialIndex = TRIAL_INDEX, playerImage: this.playerImage = 'static/images/plane.png', size = 80, trial_id = null, blockName = 'none', prompt = '&nbsp;', leftMessage = '&nbsp;', centerMessage = '&nbsp;', rightMessage = RIGHT_MESSAGE, lowerMessage = '&nbsp;'} = config); // mapping from actions to keycodes // number of trial (starts from 1) // determines the size of states, text, etc...
+      }, displayTime: this.displayTime = false, keys: this.keys = KEYS, trialIndex: this.trialIndex = TRIAL_INDEX, playerImage: this.playerImage = 'static/images/plane.png', size = 70, trial_id = null, blockName = 'none', prompt = '&nbsp;', leftMessage = '&nbsp;', centerMessage = '&nbsp;', rightMessage = RIGHT_MESSAGE, lowerMessage = '&nbsp;'} = config); // mapping from actions to keycodes // number of trial (starts from 1) // determines the size of states, text, etc...
     if (this.pid != null) {
       this.showParticipant = true;
       centerMessage = (function() {
@@ -267,7 +267,7 @@ MouselabMDP = class MouselabMDP {
         this.clicksLeft = this.clickLimit;
       }
     } else {
-      leftMessage = `<strong>Round:</strong> ${this.trialCount() + 1}/${this.num_trials}`;
+      leftMessage = `<strong>Round:</strong> <br> ${this.trialCount() + 1}/${this.num_trials}`;
     }
     // leftMessage = "Round #{@_block.trialCount + 1}/#{@_block.timeline.length}"
     this.data = {
@@ -392,6 +392,7 @@ MouselabMDP = class MouselabMDP {
     // html: """Please wait <span id='mdp-time'></span> seconds"""
     }).appendTo(this.display);
     this.clickTimerMessage.hide();
+    this.lowerMessage.show();
     this.defaultLowerMessage = lowerMessage;
     mdp = this;
     LOG_DEBUG('new MouselabMDP', this);
@@ -464,6 +465,7 @@ MouselabMDP = class MouselabMDP {
     // @waitMessage.html "Please wait #{@timeLeft} seconds"
     this.clickTimer.stop();
     this.clickTimerMessage.show();
+    this.lowerMessage.hide();
     this.clickTimerMessage.html(`You have <b>${this.clickTimeLeft} seconds</b> to make the next click.<br>Move with the arrow keys when done inspecting nodes.`);
     return this.clickTimer = ifvisible.onEvery(1, () => {
       // if @freeze then return
@@ -474,6 +476,7 @@ MouselabMDP = class MouselabMDP {
         this.clickTimeRanOut = true;
         this.clickTimer.stop();
         this.clickTimerMessage.hide();
+        this.lowerMessage.show();
         return this.lowerMessage.html("You ran out of time to make clicks!<br>Use the arrow keys to move.");
       }
     });
@@ -482,6 +485,7 @@ MouselabMDP = class MouselabMDP {
   endClickTimer() {
     // @waitMessage.html "Please wait #{@timeLeft} seconds"
     this.clickTimer.stop();
+    this.lowerMessage.show();
     return this.clickTimerMessage.hide();
   }
 
@@ -991,12 +995,12 @@ Press <code>space</code> to return to your corporeal form.`);
       htmlMessage = `You got a score of <span class=mouselab-score/> on this round.`;
     }
     if (this.displayTime) {
-      this.lowerMessage.html(htmlMessage + `<br><br>
+      this.lowerMessage.html(htmlMessage + `<br>
 It took you ` + this.data.displayed_time + ` seconds to get to the edge of the web!
 <br>
 <b>Press</b> <code>space</code> <b>to continue.</b>`);
     } else {
-      this.lowerMessage.html(htmlMessage + `<br><br>
+      this.lowerMessage.html(htmlMessage + `<br>
 <b>Press</b> <code>space</code> <b>to continue.</b>`);
     }
     $('.mouselab-score').html('$' + this.data.score.toFixed(2));
