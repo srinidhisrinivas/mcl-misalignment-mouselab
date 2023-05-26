@@ -67,20 +67,75 @@
 }
 
 #mouselab-msg-left {
-  width: 20%;
+  width: 25%;
   text-align: left;
-  margin-top: 0.75em;
+  margin-top: 2.5em;
 }
 
 #mouselab-msg-right {
-    width: 30%;
+    width: 25%;
     text-align: right;
-    margin-top: 0.75em;
+    margin-top: 2.5em;
 }
 #mouselab-msg-center {
     width: 50%;
     text-align: center;
-    margin-top: 0.75em;
+    vertical-align: top;
+    margin-top: 2.5em;
+    font-weight: bold;
+    font-size: xxx-large;
+}
+
+.fade-out {
+    animation: fadeOut ease 2s;
+    -webkit-animation: fadeOut ease 2s forwards;
+    -moz-animation: fadeOut ease 2s;
+    -o-animation: fadeOut ease 2s;
+    -ms-animation: fadeOut ease 2s;
+}
+@keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+@-moz-keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+@-webkit-keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+@-o-keyframes fadeOut {
+    0% {
+        opacity:1;
+    }
+    100% {
+        opacity:0;
+    }
+}
+
+@-ms-keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 .mouselab-msg-bottom {
@@ -91,7 +146,7 @@
 }
 
 .jspsych-content {
-    margin-top: 10px;
+    margin-top: 50px;
     text-align: center;
 }
 

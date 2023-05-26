@@ -123,6 +123,8 @@ class MouselabMDP
       @forbidReclick = false
       @revealOnArrive = true
       @highlightClicked = false
+      @emphasizeCost = false
+      @showCost = false
 
       @scoreShift=0
 
@@ -161,7 +163,7 @@ class MouselabMDP
       @keys=KEYS  # mapping from actions to keycodes
       @trialIndex=TRIAL_INDEX  # number of trial (starts from 1)
       @playerImage='static/images/plane.png'
-      size=70  # determines the size of states, text, etc...
+      size=80  # determines the size of states, text, etc...
 
       # leftMessage="Round: #{TRIAL_INDEX}/#{N_TRIAL}"
       trial_id=null
@@ -316,7 +318,14 @@ class MouselabMDP
       # html: """Please wait <span id='mdp-time'></span> seconds"""
     ).appendTo @display
 
+    @emphasizedCostMessage = $('<div>',
+      id: 'emphasized-cost-msg'
+      class: 'mouselab-msg-center'
+    # html: """Please wait <span id='mdp-time'></span> seconds"""
+    ).appendTo @display
+
     @clickTimerMessage.hide()
+    @emphasizedCostMessage.show()
     @lowerMessage.show()
     @defaultLowerMessage = lowerMessage
 
@@ -549,7 +558,19 @@ class MouselabMDP
       return
 
     if @stateLabels and @stateDisplay is 'click' and not (@clicked_states.includes(s) and @forbidReclick)
-      @addScore -@stateClickCost("#{s}").toFixed(2), false
+      cost = -@stateClickCost("#{s}")
+      @addScore cost, false
+      if @emphasizeCost
+        @centerMessage.html ('$' + cost.toFixed(2))
+        @centerMessage.css 'color', redGreen cost
+        @centerMessage.removeClass 'fade-out'
+        @centerMessage.width()
+        @centerMessage.addClass 'fade-out'
+      else if @showCost
+        g.setClickLabel '$' + cost.toFixed(2)
+        g.clickLabel.fill = redGreen cost
+        g.fadeClickLabel()
+
       @recordQuery 'click', 'state', s
       # @spendEnergy @clickEnergy
       @spendClicks @clickClicks
@@ -932,10 +953,18 @@ class State
       fontSize: SIZE / 4
       fill: '#44d'
 
-    @hoverLabel = new Text '', left+SIZE * .3, top+ SIZE*.3,
+    @hoverLabel = new Text '', left+SIZE * .3, top-SIZE*.3,
       fontSize: SIZE / 5
       fill: '#44d'
       test: 'trial'
+
+    @clickLabel = new Text '', left, top-SIZE*.4,
+      fontSize: SIZE / 4
+      fill: 'red'
+      test: 'trial'
+      fontWeight: 'bold'
+      textBackgroundColor: 'white'
+      opacity: 0
 
     @radius = @circle.radius
     @left = @circle.left
@@ -944,6 +973,7 @@ class State
     mdp.canvas.add(@circle)
     mdp.canvas.add(@label)
     mdp.canvas.add(@hoverLabel)
+    mdp.canvas.add(@clickLabel)
     mdp.canvas.add(@circle_selection)
 
     @setLabel conf.label
@@ -977,6 +1007,27 @@ class State
     else
       @hoverLabel.setText ''
     @dirty = true
+
+  setClickLabel: (txt, conf={}) ->
+    {
+      pre=''
+      post=''
+    } = conf
+    # LOG_DEBUG "setLabel #{txt}"
+    mdp.canvas.bringToFront(@clickLabel)
+    @clickLabel.backgroundColor = 'white'
+    if txt
+      @clickLabel.setText "#{pre}#{txt}#{post}"
+    else
+      @clickLabel.setText ''
+    @dirty = true
+  fadeClickLabel: () ->
+    @clickLabel.setOpacity(1)
+    @clickLabel.animate('opacity', '0', {
+        duration: 1000
+        onChange: mdp.canvas.renderAll.bind(mdp.canvas),
+      })
+
 
 
   setFill: (col, conf={}) ->

@@ -52,6 +52,7 @@ $(window).on('load', function() {
     }
     TRIALS = TRIALS_ALL[id];
     STRUCTURE = STRUCTURE_ALL[id];
+    CLICK_DEPTHS = CLICK_DEPTHS_ALL[id];
 
     getTrials = function(numTrials) {
       var finalTrials, i, k, ref, shuffledTrials;
@@ -106,6 +107,10 @@ initializeExperiment = function() {
     stimulus: `<h1> Get ready to start the game! </h1><br><br> Press <code>space</code> to continue`
   };
   let num_trials = 5;
+
+  let getClickCost = (depth) => {
+    return depth;
+  }
   let practice_trials = {
     type: jsPsychMouselabMDP,
     // display: $('#jspsych-target')
@@ -113,8 +118,8 @@ initializeExperiment = function() {
     layout: STRUCTURE.layout,
     initial: STRUCTURE.initial,
     num_trials: num_trials,
-    stateClickCost: function() {
-      return COST;
+    stateClickCost: function(s) {
+      return getClickCost(CLICK_DEPTHS[parseInt(s)]);
     },
     minTime: 10,
     stateDisplay: 'click',
@@ -122,6 +127,8 @@ initializeExperiment = function() {
     accumulateReward: true,
     wait_for_click: true,
     withholdReward: false,
+    // emphasizeCost: true,
+    // showCost: true,
     scoreShift: 2,
     stateBorder: function() {
       return "rgb(187,187,187,1)"; //getColor
@@ -134,7 +141,7 @@ initializeExperiment = function() {
     // trial_id: jsPsych.timelineVariable('trial_id',true)
     blockName: 'test',
     upperMessage: "Web of Cash - Practice Round",
-    nextClickTimeLimit: 5,
+    nextClickTimeLimit: 25,
 //     lowerMessage: `Click on the nodes to reveal their values.<br>
 // Move with the arrow keys after you are done clicking.`,
     timeline: getTrials(num_trials),
