@@ -112,6 +112,7 @@ class MouselabMDP
       @stateRewards=null
 
       @clickDelay=0
+      @clickDelayFactor=0
       @stateResetMs=null
       @moveDelay=500
       @clickClicks=1
@@ -557,9 +558,17 @@ class MouselabMDP
     if (@clicked_states.includes(s) and @forbidReclick)
       return
 
+
     if @stateLabels and @stateDisplay is 'click' and not (@clicked_states.includes(s) and @forbidReclick)
+
       cost = -@stateClickCost("#{s}")
       @addScore cost, false
+      thisClickDelay = 0
+      if @clickDelay
+        thisClickDelay = @clickDelay
+      else if @clickDelayFactor
+        thisClickDelay = Math.max 0, @clickDelayFactor * -cost
+      costFadeTime = Math.max 500, thisClickDelay
       if @emphasizeCost
         @centerMessage.html ('$' + cost.toFixed(2))
         @centerMessage.css 'color', redGreen cost
@@ -569,7 +578,7 @@ class MouselabMDP
       else if @showCost
         g.setClickLabel '$' + cost.toFixed(2)
         g.clickLabel.fill = redGreen cost
-        g.fadeClickLabel()
+        g.fadeClickLabel(costFadeTime)
 
       @recordQuery 'click', 'state', s
       # @spendEnergy @clickEnergy
@@ -578,10 +587,13 @@ class MouselabMDP
       @clicked_states.push s
       if @highlightClicked
         g.setBorder "#000000", 3
-      if @clickDelay
+
+      if thisClickDelay
         @freeze = true
         g.setLabel '...'
-        delay @clickDelay, =>
+        if @nextClickTimeLimit
+          @clickTimer.stop()
+        delay thisClickDelay, =>
           @freeze = false
           g.setLabel r
           @canvas.renderAll()
@@ -589,6 +601,8 @@ class MouselabMDP
             delay @stateResetMs, =>
               g.setLabel ''
               @canvas.renderAll()
+          if @nextClickTimeLimit
+            @resetClickTimer()
       else
         g.setLabel r
         if @stateResetMs
@@ -596,8 +610,8 @@ class MouselabMDP
             g.setLabel ''
             @canvas.renderAll()
 
-    if @nextClickTimeLimit
-      @resetClickTimer()
+        if @nextClickTimeLimit
+          @resetClickTimer()
 
 
   mouseoverState: (g, s) =>
@@ -816,11 +830,11 @@ class MouselabMDP
   buildMap: =>
     # Resize canvas.
     [xs, ys] = _.unzip (_.values @layout)
-    minx = _.min xs
-    miny = _.min ys
-    maxx = _.max xs
-    maxy = _.max ys
-    [width, height] = [maxx - minx + 1, maxy - miny + 1]
+    @minx = _.min xs
+    @miny = _.min ys
+    @maxx = _.max xs
+    @maxy = _.max ys
+    [width, height] = [@maxx - @minx + 1, @maxy - @miny + 1]
 
     @canvasElement.attr(width: width * SIZE, height: height * SIZE)
     @canvas = new fabric.Canvas 'mouselab-canvas', selection: false
@@ -831,7 +845,7 @@ class MouselabMDP
     for s, location of (removePrivate @layout)
       [x, y] = location
 
-      @states[s] = new State s, x - minx, y - miny,
+      @states[s] = new State s, x - @minx, y - @miny,
         fill: if (!@waiting or ("#{s}" is "#{@initial}")) then '#bbb' else '#fff'
         label: if (((@stateDisplay is 'always') or (@revealed_states.indexOf("#{s}") isnt -1)) and !@waiting) then @stateLabels[s] else ''
 
@@ -958,14 +972,24 @@ class State
       fill: '#44d'
       test: 'trial'
 
-    @clickLabel = new Text '', left, top-SIZE*.4,
-      fontSize: SIZE / 4
+    clx = left
+    cly = top # - SIZE * 0.1
+    fontSize = SIZE / 3
+    @clickLabelWidth = fontSize * 2.8354492125
+#    console.log "\n" + (clx - clickLabelWidth)
+#    console.log (mdp.minx) * SIZE
+#    console.log (mdp.maxx) * SIZE
+#    if clx - clickLabelWidth/2 < mdp.minx * SIZE
+#      clx = mdp.minx * SIZE + clickLabelWidth/2
+#    else if clx + clickLabelWidth/2 > mdp.maxx * SIZE
+#      clx = mdp.maxx * SIZE - clickLabelWidth/2
+    @clickLabel = new Text '', clx, cly,
+      fontSize: fontSize
       fill: 'red'
       test: 'trial'
       fontWeight: 'bold'
       textBackgroundColor: 'white'
-      opacity: 0
-
+      opacity: 1
     @radius = @circle.radius
     @left = @circle.left
     @top = @circle.top
@@ -1018,13 +1042,19 @@ class State
     @clickLabel.backgroundColor = 'white'
     if txt
       @clickLabel.setText "#{pre}#{txt}#{post}"
+      console.log "\n"
+      console.log @clickLabel.left
+      console.log @clickLabel.left - @clickLabelWidth/2
+      console.log @clickLabel.top
+      console.log((mdp.minx + 0.5) * SIZE)
+      console.log((mdp.maxx + 0.5) * SIZE)
     else
       @clickLabel.setText ''
     @dirty = true
-  fadeClickLabel: () ->
+  fadeClickLabel: (duration) ->
     @clickLabel.setOpacity(1)
     @clickLabel.animate('opacity', '0', {
-        duration: 1000
+        duration: duration
         onChange: mdp.canvas.renderAll.bind(mdp.canvas),
       })
 

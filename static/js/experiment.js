@@ -92,7 +92,7 @@ BONUS_RATE = .002;
 if (DEBUG) {
   NUM_TRIALS = 3;
 } else {
-  NUM_TRIALS = 40;
+  NUM_TRIALS = 3;
 }
 
 NUM_TUTORIAL_TRIALS = 2;

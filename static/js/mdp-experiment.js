@@ -123,12 +123,13 @@ initializeExperiment = function() {
     },
     minTime: 10,
     stateDisplay: 'click',
+    clickDelayFactor: 500,
     stateResetMs: 5000,
     accumulateReward: true,
     wait_for_click: true,
     withholdReward: false,
     // emphasizeCost: true,
-    // showCost: true,
+    showCost: true,
     scoreShift: 2,
     stateBorder: function() {
       return "rgb(187,187,187,1)"; //getColor

@@ -217,7 +217,7 @@ MouselabMDP = class MouselabMDP {
     this.checkFinished = this.checkFinished.bind(this);
     ({jsPsych: this.jsPsych, display: this.display, graph: this.graph, layout: this.layout, initial: this.initial, stateLabels: this.stateLabels = 'reward', stateHoverLabels: this.stateHoverLabels = 'num_counts', stateDisplay: this.stateDisplay = 'hover', stateClickCost: this.stateClickCost = function() { // html display element // defines transition and reward functions // defines position of states // initial state of player // object mapping from state names to labels // one of 'never', 'hover', 'click', 'always'
         return 0; // subtracted from score every time a state is clicked
-      }, edgeLabels: this.edgeLabels = 'never', edgeDisplay: this.edgeDisplay = 'always', edgeClickCost: this.edgeClickCost = 0, stateRewards: this.stateRewards = null, clickDelay: this.clickDelay = 0, stateResetMs: this.stateResetMs = null, moveDelay: this.moveDelay = 500, clickClicks: this.clickClicks = 1, displayClicksLeft: this.displayClicksLeft = false, clickEnergy: this.clickEnergy = 0, moveEnergy: this.moveEnergy = 0, startScore: this.startScore = 0, no_add: this.no_add = false, forbidReclick: this.forbidReclick = false, revealOnArrive: this.revealOnArrive = true, highlightClicked: this.highlightClicked = false, emphasizeCost: this.emphasizeCost = false, showCost: this.showCost = false, scoreShift: this.scoreShift = 0, actions: this.actions = null, demoStates: this.demoStates = null, clicks: this.clicks = null, pid: this.pid = null, allowSimulation: this.allowSimulation = false, revealRewards: this.revealRewards = true, training: this.training = false, special: this.special = '', timeLimit: this.timeLimit = null, minTime: this.minTime = null, energyLimit: this.energyLimit = null, clickLimit: this.clickLimit = null, withholdReward: this.withholdReward = false, accumulateReward: this.accumulateReward = false, nextClickTimeLimit: this.nextClickTimeLimit = null, revealed_states: this.revealed_states = [], clicked_states: this.clicked_states = [], wait_for_click: this.wait_for_click = false, waiting: this.waiting = this.wait_for_click, stateBorder: this.stateBorder = function() { // object mapping from edge names (s0 + '__' + s1) to labels // one of 'never', 'hover', 'click', 'always' // subtracted from score every time an edge is clicked
+      }, edgeLabels: this.edgeLabels = 'never', edgeDisplay: this.edgeDisplay = 'always', edgeClickCost: this.edgeClickCost = 0, stateRewards: this.stateRewards = null, clickDelay: this.clickDelay = 0, clickDelayFactor: this.clickDelayFactor = 0, stateResetMs: this.stateResetMs = null, moveDelay: this.moveDelay = 500, clickClicks: this.clickClicks = 1, displayClicksLeft: this.displayClicksLeft = false, clickEnergy: this.clickEnergy = 0, moveEnergy: this.moveEnergy = 0, startScore: this.startScore = 0, no_add: this.no_add = false, forbidReclick: this.forbidReclick = false, revealOnArrive: this.revealOnArrive = true, highlightClicked: this.highlightClicked = false, emphasizeCost: this.emphasizeCost = false, showCost: this.showCost = false, scoreShift: this.scoreShift = 0, actions: this.actions = null, demoStates: this.demoStates = null, clicks: this.clicks = null, pid: this.pid = null, allowSimulation: this.allowSimulation = false, revealRewards: this.revealRewards = true, training: this.training = false, special: this.special = '', timeLimit: this.timeLimit = null, minTime: this.minTime = null, energyLimit: this.energyLimit = null, clickLimit: this.clickLimit = null, withholdReward: this.withholdReward = false, accumulateReward: this.accumulateReward = false, nextClickTimeLimit: this.nextClickTimeLimit = null, revealed_states: this.revealed_states = [], clicked_states: this.clicked_states = [], wait_for_click: this.wait_for_click = false, waiting: this.waiting = this.wait_for_click, stateBorder: this.stateBorder = function() { // object mapping from edge names (s0 + '__' + s1) to labels // one of 'never', 'hover', 'click', 'always' // subtracted from score every time an edge is clicked
         return '#bbbbbb'; // default border is same color as node
       // num clicks needed for reveal
       }, num_trials: this.num_trials = null, trialCount: this.trialCount = null, num_clicks_accrued: this.num_clicks_accrued = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], num_clicks_needed: this.num_clicks_needed = this.num_clicks_accrued, colorInterpolation: this.colorInterpolation = function() { //[0,1,2,3,3,1,2,3,3,1,2,3,3]
@@ -628,7 +628,7 @@ Press <code>space</code> to return to your corporeal form.`);
   }
 
   clickState(g, s) {
-    var cost, r;
+    var cost, costFadeTime, r, thisClickDelay;
     LOG_DEBUG(`clickState ${s}`);
     if (this.waiting && (`${s}` === `${this.initial}`)) {
       this.waiting = false;
@@ -677,6 +677,13 @@ Press <code>space</code> to return to your corporeal form.`);
     if (this.stateLabels && this.stateDisplay === 'click' && !(this.clicked_states.includes(s) && this.forbidReclick)) {
       cost = -this.stateClickCost(`${s}`);
       this.addScore(cost, false);
+      thisClickDelay = 0;
+      if (this.clickDelay) {
+        thisClickDelay = this.clickDelay;
+      } else if (this.clickDelayFactor) {
+        thisClickDelay = Math.max(0, this.clickDelayFactor * -cost);
+      }
+      costFadeTime = Math.max(500, thisClickDelay);
       if (this.emphasizeCost) {
         this.centerMessage.html('$' + cost.toFixed(2));
         this.centerMessage.css('color', redGreen(cost));
@@ -686,7 +693,7 @@ Press <code>space</code> to return to your corporeal form.`);
       } else if (this.showCost) {
         g.setClickLabel('$' + cost.toFixed(2));
         g.clickLabel.fill = redGreen(cost);
-        g.fadeClickLabel();
+        g.fadeClickLabel(costFadeTime);
       }
       this.recordQuery('click', 'state', s);
       // @spendEnergy @clickEnergy
@@ -696,18 +703,24 @@ Press <code>space</code> to return to your corporeal form.`);
       if (this.highlightClicked) {
         g.setBorder("#000000", 3);
       }
-      if (this.clickDelay) {
+      if (thisClickDelay) {
         this.freeze = true;
         g.setLabel('...');
-        delay(this.clickDelay, () => {
+        if (this.nextClickTimeLimit) {
+          this.clickTimer.stop();
+        }
+        return delay(thisClickDelay, () => {
           this.freeze = false;
           g.setLabel(r);
           this.canvas.renderAll();
           if (this.stateResetMs) {
-            return delay(this.stateResetMs, () => {
+            delay(this.stateResetMs, () => {
               g.setLabel('');
               return this.canvas.renderAll();
             });
+          }
+          if (this.nextClickTimeLimit) {
+            return this.resetClickTimer();
           }
         });
       } else {
@@ -718,10 +731,10 @@ Press <code>space</code> to return to your corporeal form.`);
             return this.canvas.renderAll();
           });
         }
+        if (this.nextClickTimeLimit) {
+          return this.resetClickTimer();
+        }
       }
-    }
-    if (this.nextClickTimeLimit) {
-      return this.resetClickTimer();
     }
   }
 
@@ -940,14 +953,14 @@ Press <code>space</code> to return to your corporeal form.`);
   }
 
   buildMap() {
-    var a, actions, height, location, maxx, maxy, minx, miny, r, ref, ref1, results, s, s0, s1, width, x, xs, y, ys;
+    var a, actions, height, location, r, ref, ref1, results, s, s0, s1, width, x, xs, y, ys;
     // Resize canvas.
     [xs, ys] = _.unzip(_.values(this.layout));
-    minx = _.min(xs);
-    miny = _.min(ys);
-    maxx = _.max(xs);
-    maxy = _.max(ys);
-    [width, height] = [maxx - minx + 1, maxy - miny + 1];
+    this.minx = _.min(xs);
+    this.miny = _.min(ys);
+    this.maxx = _.max(xs);
+    this.maxy = _.max(ys);
+    [width, height] = [this.maxx - this.minx + 1, this.maxy - this.miny + 1];
     this.canvasElement.attr({
       width: width * SIZE,
       height: height * SIZE
@@ -961,7 +974,7 @@ Press <code>space</code> to return to your corporeal form.`);
     for (s in ref) {
       location = ref[s];
       [x, y] = location;
-      this.states[s] = new State(s, x - minx, y - miny, {
+      this.states[s] = new State(s, x - this.minx, y - this.miny, {
         fill: (!this.waiting || (`${s}` === `${this.initial}`)) ? '#bbb' : '#fff',
         label: (((this.stateDisplay === 'always') || (this.revealed_states.indexOf(`${s}`) !== -1)) && !this.waiting) ? this.stateLabels[s] : ''
       });
@@ -1062,7 +1075,7 @@ It took you ` + this.data.displayed_time + ` seconds to get to the edge of the w
 //  =========================== #
 State = class State {
   constructor(name, left, top, config = {}) {
-    var conf, conf_selection;
+    var clx, cly, conf, conf_selection, fontSize;
     this.name = name;
     left = (left + 0.5) * SIZE;
     top = (top + 0.5) * SIZE;
@@ -1096,13 +1109,24 @@ State = class State {
       fill: '#44d',
       test: 'trial'
     });
-    this.clickLabel = new Text('', left, top - SIZE * .4, {
-      fontSize: SIZE / 4,
+    clx = left;
+    cly = top; // - SIZE * 0.1
+    fontSize = SIZE / 3;
+    this.clickLabelWidth = fontSize * 2.8354492125;
+    //    console.log "\n" + (clx - clickLabelWidth)
+    //    console.log (mdp.minx) * SIZE
+    //    console.log (mdp.maxx) * SIZE
+    //    if clx - clickLabelWidth/2 < mdp.minx * SIZE
+    //      clx = mdp.minx * SIZE + clickLabelWidth/2
+    //    else if clx + clickLabelWidth/2 > mdp.maxx * SIZE
+    //      clx = mdp.maxx * SIZE - clickLabelWidth/2
+    this.clickLabel = new Text('', clx, cly, {
+      fontSize: fontSize,
       fill: 'red',
       test: 'trial',
       fontWeight: 'bold',
       textBackgroundColor: 'white',
-      opacity: 0
+      opacity: 1
     });
     this.radius = this.circle.radius;
     this.left = this.circle.left;
@@ -1160,16 +1184,22 @@ State = class State {
     this.clickLabel.backgroundColor = 'white';
     if (txt) {
       this.clickLabel.setText(`${pre}${txt}${post}`);
+      console.log("\n");
+      console.log(this.clickLabel.left);
+      console.log(this.clickLabel.left - this.clickLabelWidth / 2);
+      console.log(this.clickLabel.top);
+      console.log((mdp.minx + 0.5) * SIZE);
+      console.log((mdp.maxx + 0.5) * SIZE);
     } else {
       this.clickLabel.setText('');
     }
     return this.dirty = true;
   }
 
-  fadeClickLabel() {
+  fadeClickLabel(duration) {
     this.clickLabel.setOpacity(1);
     return this.clickLabel.animate('opacity', '0', {
-      duration: 1000,
+      duration: duration,
       onChange: mdp.canvas.renderAll.bind(mdp.canvas)
     });
   }
