@@ -27,7 +27,7 @@ else
   """
   CONDITION = parseInt condition
   # TODO: remove this
-  CONDITION = 1
+  CONDITION = 0
   console.log condition
 
 if mode is "{{ mode }}"
