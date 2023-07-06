@@ -24,7 +24,7 @@ X X X X X X X X X X X X X X X X X`);
 # =============================== #`);
   CONDITION = parseInt(condition);
   // TODO: remove this
-  CONDITION = 0;
+  CONDITION = 1;
   console.log(condition);
 }
 
