@@ -27,7 +27,7 @@ else
   """
   CONDITION = parseInt condition
   # TODO: remove this
-  CONDITION = 0
+  CONDITION = 1
   console.log condition
 
 if mode is "{{ mode }}"
@@ -290,7 +290,6 @@ initializeExperiment = ->
   task_misaligned = {
     "experiment_time_mins": 35
   }
-  console.log 1
 
   # Opening instructions for each condition
   task_control["experiment_instructions"] = {
@@ -515,7 +514,6 @@ initializeExperiment = ->
 
     ]
   }
-  console.log 2
   # Practice Mouselab trials for each conditions
   task_control["practice_trials"] = {
     type: jsPsychMouselabMDP
@@ -579,7 +577,6 @@ initializeExperiment = ->
     on_timeline_start: () ->
       pracTrialCount = 0
   }
-  console.log 3
   # Second set of mouselab instructions for the disappearing timed condition
   task_control["mouselab_instructions_2"] = {
     type: jsPsychInstructions
@@ -748,7 +745,6 @@ initializeExperiment = ->
       psiturk.saveData()
       return false
   }
-  console.log 4
   task_misaligned["mouselab_instruct_loop"] = {
     timeline: [
       fullscreen,
@@ -929,7 +925,6 @@ initializeExperiment = ->
       trialCount = 0
   }
 
-  console.log 5
   #final screen if participants didn't pass instructions quiz (control condition)
   finish_fail = {
        type: jsPsychSurveyText
@@ -1009,7 +1004,6 @@ initializeExperiment = ->
       </p>
     """
   }
-  console.log 6
   # ================================================ #
   # ========= TIMELINE LOGIC ======================= #
   # ================================================ #
@@ -1056,14 +1050,12 @@ initializeExperiment = ->
       if_node1,
       task_misaligned["if_node2"]
     ]
-  console.log 7
   # ================================================ #
   # ========= START AND END THE EXPERIMENT ========= #
   # ================================================ #
 
   # experiment goes to full screen at start
   experiment_timeline.unshift({type:jsPsychFullscreen, message: '<p>The experiment will switch to full screen mode when you press the button below.<br> Please do not leave full screen for the duration of the experiment. </p>', button_label:'Continue', fullscreen_mode:true, delay_after:1000})
-  console.log 8
   # at end, show the secret code and then leave fullscreen
   secret_code_trial =
     type: jsPsychHtmlButtonResponse
@@ -1072,10 +1064,8 @@ initializeExperiment = ->
     Press 'Finish HIT' in order to reach the completion code. Once the data has been saved, you will receive the code either in this window or in the original browser window where you started the experiment.
 
   """
-  console.log 9
   experiment_timeline.push(secret_code_trial)
   experiment_timeline.push({type:jsPsychFullscreen, fullscreen_mode:false, delay_after:1000})
-  console.log 10
   # bonus is the (roughly) total score multiplied by something, bounded by min and max amount
   calculateBonus = ->
     bonus = SCORE * PARAMS.bonusRate
@@ -1109,6 +1099,5 @@ initializeExperiment = ->
       $('#jspsych-target').html 'Trying to resubmit...'
       reprompt = window.setTimeout(prompt_resubmit, 10000)
       save_data()
-  console.log 8
   # initialize jspsych experiment -- without this nothing happens
   jsPsych.run(experiment_timeline)
