@@ -202,6 +202,7 @@ class MouselabMDP
       stop: ->
         return
     @clickTimeRanOut = false
+    @clickTimerEnded = false
 
     if @energyLimit
       leftMessage = 'Energy: <b><span id=mouselab-energy/></b>'
@@ -376,6 +377,8 @@ class MouselabMDP
     $('#mdp-time').html @timeLeft
     $('#mdp-time').css 'color', (redGreen (-@timeLeft + .1))
   resetClickTimer: =>
+    if @clickTimerEnded
+      return
     @clickTimeLeft = @nextClickTimeLimit
     # @waitMessage.html "Please wait #{@timeLeft} seconds"
     @clickTimer.stop()
@@ -396,6 +399,7 @@ class MouselabMDP
         @lowerMessage.html "You ran out of time to make clicks!<br>Use the arrow keys to move."
   endClickTimer: =>
     # @waitMessage.html "Please wait #{@timeLeft} seconds"
+    @clickTimerEnded = true
     @clickTimer.stop()
     @lowerMessage.show()
     @clickTimerMessage.hide()
@@ -480,15 +484,17 @@ class MouselabMDP
       @graph[s0][a]
 
   move: (s0, a, s1) =>
+    LOG_INFO 'moving'
+    if @freeze
+      LOG_INFO 'freeze!'
+      @arrive s0, 'repeat'
+      return
     if not @moved and @nextClickTimeLimit
       @endClickTimer()
     @moved = true
     for state in  Object.values(@states)
         state.setHoverLabel ''
-    if @freeze
-      LOG_INFO 'freeze!'
-      @arrive s0, 'repeat'
-      return
+
 
     nClick = @data.queries.click.state.target.length
     notEnoughClicks = (@special.startsWith 'trainClick') and nClick < 3

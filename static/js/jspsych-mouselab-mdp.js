@@ -259,6 +259,7 @@ MouselabMDP = class MouselabMDP {
       stop: function() {}
     };
     this.clickTimeRanOut = false;
+    this.clickTimerEnded = false;
     if (this.energyLimit) {
       leftMessage = 'Energy: <b><span id=mouselab-energy/></b>';
     // if not @_block.energyLeft?
@@ -469,6 +470,9 @@ MouselabMDP = class MouselabMDP {
   }
 
   resetClickTimer() {
+    if (this.clickTimerEnded) {
+      return;
+    }
     this.clickTimeLeft = this.nextClickTimeLimit;
     // @waitMessage.html "Please wait #{@timeLeft} seconds"
     this.clickTimer.stop();
@@ -492,6 +496,7 @@ MouselabMDP = class MouselabMDP {
 
   endClickTimer() {
     // @waitMessage.html "Please wait #{@timeLeft} seconds"
+    this.clickTimerEnded = true;
     this.clickTimer.stop();
     this.lowerMessage.show();
     return this.clickTimerMessage.hide();
@@ -586,6 +591,12 @@ Press <code>space</code> to return to your corporeal form.`);
 
   move(s0, a, s1) {
     var i, len, nClick, newTop, notEnoughClicks, r, ref, s1g, state;
+    LOG_INFO('moving');
+    if (this.freeze) {
+      LOG_INFO('freeze!');
+      this.arrive(s0, 'repeat');
+      return;
+    }
     if (!this.moved && this.nextClickTimeLimit) {
       this.endClickTimer();
     }
@@ -594,11 +605,6 @@ Press <code>space</code> to return to your corporeal form.`);
     for (i = 0, len = ref.length; i < len; i++) {
       state = ref[i];
       state.setHoverLabel('');
-    }
-    if (this.freeze) {
-      LOG_INFO('freeze!');
-      this.arrive(s0, 'repeat');
-      return;
     }
     nClick = this.data.queries.click.state.target.length;
     notEnoughClicks = (this.special.startsWith('trainClick')) && nClick < 3;

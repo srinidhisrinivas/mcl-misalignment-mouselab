@@ -121,9 +121,9 @@ initializeExperiment = function() {
     stateClickCost: function(s) {
       return getClickCost(CLICK_DEPTHS[parseInt(s)]);
     },
-    minTime: 10,
+    minTime: 1,
     stateDisplay: 'click',
-    clickDelayFactor: 500,
+    clickDelay: 1000,
     stateResetMs: 5000,
     accumulateReward: true,
     wait_for_click: true,

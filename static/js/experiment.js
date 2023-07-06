@@ -24,7 +24,7 @@ X X X X X X X X X X X X X X X X X`);
 # =============================== #`);
   CONDITION = parseInt(condition);
   // TODO: remove this
-  CONDITION = 0;
+  CONDITION = 1;
   console.log(condition);
 }
 
@@ -368,7 +368,6 @@ initializeExperiment = function() {
   task_misaligned = {
     "experiment_time_mins": 35
   };
-  console.log(1);
   // Opening instructions for each condition
   task_control["experiment_instructions"] = {
     type: jsPsychInstructions,
@@ -573,7 +572,6 @@ Click 'Next' to start with the practice rounds.`
       ];
     }
   };
-  console.log(2);
   // Practice Mouselab trials for each conditions
   task_control["practice_trials"] = {
     type: jsPsychMouselabMDP,
@@ -653,7 +651,6 @@ Click 'Next' to start with the practice rounds.`
       return pracTrialCount = 0;
     }
   };
-  console.log(3);
   // Second set of mouselab instructions for the disappearing timed condition
   task_control["mouselab_instructions_2"] = {
     type: jsPsychInstructions,
@@ -894,7 +891,6 @@ You <em>must</em> pass the quiz in at most <strong>${MAX_REPETITIONS}</strong> a
       return false;
     }
   };
-  console.log(4);
   task_misaligned["mouselab_instruct_loop"] = {
     timeline: [fullscreen, task_misaligned["mouselab_instructions_1"], task_misaligned["practice_trials"], task_misaligned["mouselab_instructions_2"], task_misaligned["mouselab_quiz"]],
     conditional_function: function() {
@@ -1173,7 +1169,6 @@ Remember, the more money the spider gets, the bigger your bonus will be!
       return trialCount = 0;
     }
   };
-  console.log(5);
   //final screen if participants didn't pass instructions quiz (control condition)
   finish_fail = {
     type: jsPsychSurveyText,
@@ -1278,7 +1273,6 @@ Please briefly answer the questions below before you submit the HIT.`;
   <input required type="radio" name="effort" value="4">Unsure<br>
 </p>`
   };
-  console.log(6);
   // ================================================ #
   // ========= TIMELINE LOGIC ======================= #
   // ================================================ #
@@ -1323,7 +1317,6 @@ Please briefly answer the questions below before you submit the HIT.`;
   } else if (CONDITION === 1) {
     experiment_timeline = [task_misaligned["experiment_instructions"], task_misaligned["mouselab_instruct_loop"], if_node1, task_misaligned["if_node2"]];
   }
-  console.log(7);
   // ================================================ #
   // ========= START AND END THE EXPERIMENT ========= #
   // ================================================ #
@@ -1336,7 +1329,6 @@ Please briefly answer the questions below before you submit the HIT.`;
     fullscreen_mode: true,
     delay_after: 1000
   });
-  console.log(8);
   // at end, show the secret code and then leave fullscreen
   secret_code_trial = {
     type: jsPsychHtmlButtonResponse,
@@ -1346,14 +1338,12 @@ Please briefly answer the questions below before you submit the HIT.`;
 `;
     }
   };
-  console.log(9);
   experiment_timeline.push(secret_code_trial);
   experiment_timeline.push({
     type: jsPsychFullscreen,
     fullscreen_mode: false,
     delay_after: 1000
   });
-  console.log(10);
   // bonus is the (roughly) total score multiplied by something, bounded by min and max amount
   calculateBonus = function() {
     var bonus;
@@ -1393,7 +1383,6 @@ Press the button to resubmit.
       return save_data();
     });
   };
-  console.log(8);
   // initialize jspsych experiment -- without this nothing happens
   return jsPsych.run(experiment_timeline);
 };
