@@ -1,7 +1,7 @@
 # coffeelint: disable=max_line_length, indentation
 
 DEBUG = false
-DEBUG_INSTRUCTIONS = true
+DEBUG_INSTRUCTIONS = false
 DEBUG_SUBMIT = no
 TALK = no
 
@@ -42,16 +42,17 @@ NUM_SEQUENCE_LENGTH = 7
 CLICK_DELAY_FNS =
   "control": (depth) -> 1.5 * 1000
   "misaligned": (depth) -> [0, 0, 0, 0, 2.75 * 1000][depth-1]
+BASE_COST = 1.4
 CLICK_COST_FNS =
-  "control": (depth) -> 1.4
+  "control": (depth) -> BASE_COST
   "misaligned": (depth) -> [-0.25, 0.35, 0.95, 1.55, 2.15][depth-1]
 
 COST_ANSWERS = ["There is no cost for clicking on nodes.", "The cost for clicking on nodes may vary between nodes.", "The cost is always $2.", "It is less costly to inspect further nodes."]
 COST_QUESTION = "Which of the following is true about the cost of clicking on nodes?"
 COST_CORRECT = "The cost for clicking on nodes may vary between nodes."
-COST_ANSWERS_BASELINE = ["There was no cost for clicking on nodes.", "The cost for clicking on nodes varied between nodes.", "The cost was always $#{COST}.", "It was less costly to inspect further nodes."]
+COST_ANSWERS_BASELINE = ["There was no cost for clicking on nodes.", "The cost for clicking on nodes varied between nodes.", "The cost was always $#{BASE_COST}.", "It was less costly to inspect further nodes."]
 COST_QUESTION_BASELINE = "Which of the following was true about the cost of clicking on nodes?"
-COST_CORRECT_BASELINE = "The cost was always $#{COST}."
+COST_CORRECT_BASELINE = "The cost was always $#{BASE_COST}."
 
 CLICK_TIME_ANSWERS = ["Unlimited time", "10 seconds", "#{TIME_NEXT_CLICK} seconds", "1 second"]
 CLICK_TIME_CORRECT = "#{TIME_NEXT_CLICK} seconds"
@@ -76,7 +77,7 @@ BONUS_RATE = .002
 if DEBUG
   NUM_TRIALS = 3
 else
-  NUM_TRIALS = 5
+  NUM_TRIALS = 3
 
 NUM_TUTORIAL_TRIALS = 2
 MAX_AMOUNT = BONUS_RATE*(NUM_TRIALS*(4+8+48)+800)
