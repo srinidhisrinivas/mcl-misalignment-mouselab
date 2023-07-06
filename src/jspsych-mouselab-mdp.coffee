@@ -112,7 +112,7 @@ class MouselabMDP
       @stateRewards=null
 
       @clickDelay=0
-      @clickDelayFactor=0
+      @clickDelayFunction=(s) -> 0
       @stateResetMs=null
       @moveDelay=500
       @clickClicks=1
@@ -566,9 +566,9 @@ class MouselabMDP
       thisClickDelay = 0
       if @clickDelay
         thisClickDelay = @clickDelay
-      else if @clickDelayFactor
-        thisClickDelay = Math.max 0, @clickDelayFactor * -cost
-      costFadeTime = Math.max 500, thisClickDelay
+      else if @clickDelayFunction
+        thisClickDelay = @clickDelayFunction("#{s}")
+      costFadeTime = Math.max 1000, thisClickDelay
       if @emphasizeCost
         @centerMessage.html ('$' + cost.toFixed(2))
         @centerMessage.css 'color', redGreen cost
@@ -576,7 +576,10 @@ class MouselabMDP
         @centerMessage.width()
         @centerMessage.addClass 'fade-out'
       else if @showCost
-        g.setClickLabel '$' + cost.toFixed(2)
+        sign = "$"
+        if cost >= 0
+          sign = "+" + sign
+        g.setClickLabel sign + cost.toFixed(2)
         g.clickLabel.fill = redGreen cost
         g.fadeClickLabel(costFadeTime)
 
@@ -973,16 +976,10 @@ class State
       test: 'trial'
 
     clx = left
-    cly = top # - SIZE * 0.1
+    cly = top - SIZE * 0.3
     fontSize = SIZE / 3
     @clickLabelWidth = fontSize * 2.8354492125
-#    console.log "\n" + (clx - clickLabelWidth)
-#    console.log (mdp.minx) * SIZE
-#    console.log (mdp.maxx) * SIZE
-#    if clx - clickLabelWidth/2 < mdp.minx * SIZE
-#      clx = mdp.minx * SIZE + clickLabelWidth/2
-#    else if clx + clickLabelWidth/2 > mdp.maxx * SIZE
-#      clx = mdp.maxx * SIZE - clickLabelWidth/2
+
     @clickLabel = new Text '', clx, cly,
       fontSize: fontSize
       fill: 'red'
@@ -1042,12 +1039,7 @@ class State
     @clickLabel.backgroundColor = 'white'
     if txt
       @clickLabel.setText "#{pre}#{txt}#{post}"
-      console.log "\n"
-      console.log @clickLabel.left
-      console.log @clickLabel.left - @clickLabelWidth/2
-      console.log @clickLabel.top
-      console.log((mdp.minx + 0.5) * SIZE)
-      console.log((mdp.maxx + 0.5) * SIZE)
+
     else
       @clickLabel.setText ''
     @dirty = true
