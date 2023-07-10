@@ -358,7 +358,7 @@ initializeExperiment = ->
         <br><br>
         On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web. The spider starts at the node in the middle of the web, and must be moved to any one of the eighteen nodes at the edge of the web, which are five steps away from the starting node.
 
-        Each of these nodes has a certain value, and the number present <strong>at the nodes that the spider walks through from start to finish</strong> is relevant to your score for the round. Once you finish a round, the score that you received for the path that you chose will be displayed.
+        Each of these nodes has a certain value, and the numbers present <strong>at the nodes that the spider walks through from start to finish</strong> are relevant to your score for the round. Once you finish a round, the score that you received for the path that you chose will be displayed.
 
         <br><br>
         <strong>Your objective on each round is to get the highest score possible</strong>. The cumulative score from all the individual rounds will be your final score at the end of the game. The higher your final score at the end of the game, the higher your HIT bonus will be.
@@ -373,11 +373,12 @@ initializeExperiment = ->
       """
         <h1> <em>Web of Cash</em> (1/3) - Node Inspector</h1>
 
-        It's hard to make a good decision about which path to take when you can't see the numbers at the nodes!
+        Initially, the numbers present at the nodes are hidden, so it's hard to make a good decision about which path to choose when you can't see the numbers at the nodes!
         Fortunately, in the <em>Web of Cash</em> game you will have access to a <strong><em>node inspector</em></strong> which can reveal
-        the value of a node for #{TIME_NODE_REVEAL} seconds, before it disappears again. Once you reveal the value of a node, it will be highlighted with a black border, and you cannot click on that node again to reveal its value once more.
+        the value of any node for #{TIME_NODE_REVEAL} seconds, before it disappears again. Once you reveal the value of a node, it will be highlighted with a black border, and you cannot click on that node again to reveal its value once more.
 
         <br><br> When using the <strong><em>node inspector</em></strong>, you have to be quick! After each click, you will have #{TIME_NEXT_CLICK} seconds to make the next click. If you do not make the next click in this much time, the node inspector will be disabled for the round, and you will have to start moving the spider.
+        <br><br> Once you have finished using the node inspector, you must move the spider using the arrow keys along the path you chose. You do not need to reveal a node's value to walk through it, but its value will still impact your score.
         <br><br>
         To use the node inspector, you must <strong><em>click on a node</em></strong>. The image below illustrates how this works.
         <br><br>
@@ -442,7 +443,7 @@ initializeExperiment = ->
         <br><br>
         On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web. The spider starts at the node in the middle of the web, and must be moved to any one of the eighteen nodes at the edge of the web, which are five steps away from the starting node.
 
-        Each of these nodes has a certain value, and the number present <strong>at the nodes that the spider walks through from start to finish</strong> is relevant to your score for the round. Once you finish a round, the score that you received for the path that you chose will be displayed.
+        Each of these nodes has a certain value, and the numbers present <strong>at the nodes that the spider walks through from start to finish</strong> are relevant to your score for the round. Once you finish a round, the score that you received for the path that you chose will be displayed.
 
         <br><br>
         <strong>Your objective on each round is to get the highest score possible</strong>. The cumulative score from all the individual rounds will be your final score at the end of the game. The higher your final score at the end of the game, the higher your HIT bonus will be.
@@ -457,15 +458,16 @@ initializeExperiment = ->
       """
         <h1> <em>Web of Cash</em> (1/3) - Node Inspector</h1>
 
-        It's hard to make a good decision about which path to take when you can't see the numbers at the nodes!
+        Initially, the numbers present at the nodes are hidden, so it's hard to make a good decision about which path to choose when you can't see the numbers at the nodes!
         Fortunately, in the <em>Web of Cash</em> game you will have access to a <strong><em>node inspector</em></strong> which can reveal
-        the value of a node for #{TIME_NODE_REVEAL} seconds, before it disappears again. Once you reveal the value of a node, it will be highlighted with a black border, and you cannot click on that node again to reveal its value once more.
+        the value of any node for #{TIME_NODE_REVEAL} seconds, before it disappears again. Once you reveal the value of a node, it will be highlighted with a black border, and you cannot click on that node again to reveal its value once more.
 
         <br><br> When using the <strong><em>node inspector</em></strong>, you have to be quick! After each click, you will have #{TIME_NEXT_CLICK} seconds to make the next click. If you do not make the next click in this much time, the node inspector will be disabled for the round, and you will have to start moving the spider.
+        <br><br> Once you have finished using the node inspector, you must move the spider using the arrow keys along the path you chose. You do not need to reveal a node's value to walk through it, but its value will still impact your score.
         <br><br>
         To use the node inspector, you must <strong><em>click on a node</em></strong>. The image below illustrates how this works.
         <br><br>
-        The node inspector costs a certain amount to reveal a node. This cost may vary between nodes. The fee will be instantly deducted from the spider's money (your score) for that round. Furthermore, there will be a short delay between the time you click on the score and the time that the node is revealed. This may also vary between nodes.
+        The node inspector costs a certain amount to reveal a node. This cost may vary between nodes, and you sometimes may even receive a reward for clicking on a node. The fee (or reward) will be instantly deducted from (or added to) the spider's money (your score) for that round. Furthermore, there will be a short delay between the time you click on the score and the time that the node is revealed. This may also vary between nodes.
         <br><br>
         <strong>Note:</strong> you can only use the node inspector when you're on the starting
         node. Once you start moving, you can no longer inspect any nodes.
