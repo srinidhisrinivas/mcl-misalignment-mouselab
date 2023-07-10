@@ -26,8 +26,6 @@ else
   # =============================== #
   """
   CONDITION = parseInt condition
-  # TODO: remove this
-  CONDITION = 0
   console.log condition
 
 if mode is "{{ mode }}"
@@ -73,11 +71,10 @@ SCORE = 0
 CORRECT_SEQ_PCTG = 0
 BONUS_RATE = .002
 
-# TODO : change this back
 if DEBUG
   NUM_TRIALS = 3
 else
-  NUM_TRIALS = 3
+  NUM_TRIALS = 40
 
 NUM_TUTORIAL_TRIALS = 2
 MAX_AMOUNT = BONUS_RATE*(NUM_TRIALS*(4+8+48)+800)
@@ -187,7 +184,7 @@ $(window).on 'load', ->
       inspectCost: COST
       startTime: Date(Date.now())
       bonusRate: BONUS_RATE
-      variance: '1_2_4_8_32_uniform'
+      variance: '1_2_4_8_44'
       branching: '31123'
 
     COST_EXPLANATION = "Some nodes may require more clicks than others."
