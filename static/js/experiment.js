@@ -435,14 +435,14 @@ If you complete the entire experiment, you will receive a bonus payment for your
       return [
         ` <h1>The Spider Web</h1>
 
- In the <em>Web of Cash</em> game you will guide a money-loving spider through a spider web. Your goal is to travel from the start of the web to the end of the web in five moves.
+ In the <em>Web of Cash</em> game you will guide a money-loving spider through a spider web. Your goal is to travel from the start of the web to the end of the web in five moves. After you make the moves, you will receive a score for the path that you chose to take from start to finish.
  <br><br>
  On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web. The spider starts at the node in the middle of the web, and must be moved to any one of the eighteen nodes at the edge of the web, which are five steps away from the starting node.
 
- Each of these nodes has a certain value, and <strong>the money collected from the nodes that you pass through from start to finish contribute to your score for that round.</strong> Once you finish a round, the score for that round will be displayed.
+ Each of these nodes has a certain value, and the number present <strong>at the nodes that the spider walks through from start to finish</strong> is relevant to your score for the round. Once you finish a round, the score that you received for the path that you chose will be displayed.
 
  <br><br>
- Your objective on each round is to get the highest score possible. The cumulative score from all the individual rounds will be your final score at the end of the game. The higher your final score at the end of the game, the higher your HIT bonus will be.
+ <strong>Your objective on each round is to get the highest score possible</strong>. The cumulative score from all the individual rounds will be your final score at the end of the game. The higher your final score at the end of the game, the higher your HIT bonus will be.
  <br><br>
  You will be able to move the spider with the arrow keys, but only in the direction
  of the arrows between the nodes. The image below shows the shape of all the webs that you will be navigating in when the game starts.
@@ -451,7 +451,7 @@ If you complete the entire experiment, you will receive a bonus payment for your
 `,
         `<h1> <em>Web of Cash</em> (1/3) - Node Inspector</h1>
 
-It's hard to make a good decision when you can't see what you will get!
+It's hard to make a good decision about which path to take when you can't see the numbers at the nodes!
 Fortunately, in the <em>Web of Cash</em> game you will have access to a <strong><em>node inspector</em></strong> which can reveal
 the value of a node for ${TIME_NODE_REVEAL} seconds, before it disappears again. Once you reveal the value of a node, it will be highlighted with a black border, and you cannot click on that node again to reveal its value once more.
 
@@ -508,14 +508,14 @@ Click 'Next' to start with the practice rounds.`
       return [
         ` <h1>The Spider Web</h1>
 
- In the <em>Web of Cash</em> game you will guide a money-loving spider through a spider web. Your goal is to travel from the start of the web to the end of the web in five moves.
+ In the <em>Web of Cash</em> game you will guide a money-loving spider through a spider web. Your goal is to travel from the start of the web to the end of the web in five moves. After you make the moves, you will receive a score for the path that you chose to take from start to finish.
  <br><br>
  On your way from start to finish, you will pass through the <em>nodes</em> (gray circles) of the spider web. The spider starts at the node in the middle of the web, and must be moved to any one of the eighteen nodes at the edge of the web, which are five steps away from the starting node.
 
- Each of these nodes has a certain value, and <strong>the money collected from the nodes that you pass through from start to finish contribute to your score for that round.</strong> Once you finish a round, the score for that round will be displayed.
+ Each of these nodes has a certain value, and the number present <strong>at the nodes that the spider walks through from start to finish</strong> is relevant to your score for the round. Once you finish a round, the score that you received for the path that you chose will be displayed.
 
  <br><br>
- Your objective on each round is to get the highest score possible. The cumulative score from all the individual rounds will be your final score at the end of the game. The higher your final score at the end of the game, the higher your HIT bonus will be.
+ <strong>Your objective on each round is to get the highest score possible</strong>. The cumulative score from all the individual rounds will be your final score at the end of the game. The higher your final score at the end of the game, the higher your HIT bonus will be.
  <br><br>
  You will be able to move the spider with the arrow keys, but only in the direction
  of the arrows between the nodes. The image below shows the shape of all the webs that you will be navigating in when the game starts.
@@ -524,7 +524,7 @@ Click 'Next' to start with the practice rounds.`
 `,
         `<h1> <em>Web of Cash</em> (1/3) - Node Inspector</h1>
 
-It's hard to make a good decision when you can't see what you will get!
+It's hard to make a good decision about which path to take when you can't see the numbers at the nodes!
 Fortunately, in the <em>Web of Cash</em> game you will have access to a <strong><em>node inspector</em></strong> which can reveal
 the value of a node for ${TIME_NODE_REVEAL} seconds, before it disappears again. Once you reveal the value of a node, it will be highlighted with a black border, and you cannot click on that node again to reveal its value once more.
 
@@ -532,7 +532,7 @@ the value of a node for ${TIME_NODE_REVEAL} seconds, before it disappears again.
 <br><br>
 To use the node inspector, you must <strong><em>click on a node</em></strong>. The image below illustrates how this works.
 <br><br>
-The node inspector costs a certain amount to reveal a node. This cost may vary between nodes. When there is a cost the fee will be instantly deducted from the spider's money (your score) for that round. For some nodes, you may be even given a reward for revealing the information. This will also be added directly to your score after clicking. Furthermore, there will be a short delay between the time you click on the score and the time that the node is revealed. This may also vary between nodes.
+The node inspector costs a certain amount to reveal a node. This cost may vary between nodes. The fee will be instantly deducted from the spider's money (your score) for that round. Furthermore, there will be a short delay between the time you click on the score and the time that the node is revealed. This may also vary between nodes.
 <br><br>
 <strong>Note:</strong> you can only use the node inspector when you're on the starting
 node. Once you start moving, you can no longer inspect any nodes.
@@ -592,7 +592,7 @@ Click 'Next' to start with the practice rounds.`
     highlightClicked: true,
     withholdReward: false,
     showCost: true,
-    scoreShift: 2,
+    scoreShift: 3.5,
     stateBorder: function() {
       return "rgb(187,187,187,1)"; //getColor
     },
@@ -631,7 +631,7 @@ Click 'Next' to start with the practice rounds.`
     highlightClicked: true,
     withholdReward: false,
     showCost: true,
-    scoreShift: 2,
+    scoreShift: 3.5,
     stateBorder: function() {
       return "rgb(187,187,187,1)"; //getColor
     },
