@@ -26,6 +26,8 @@ else
   # =============================== #
   """
   CONDITION = parseInt condition
+  # TODO: remove this
+  CONDITION = 1
   console.log condition
 
 if mode is "{{ mode }}"
@@ -74,7 +76,7 @@ BONUS_RATE = .002
 if DEBUG
   NUM_TRIALS = 3
 else
-  NUM_TRIALS = 40
+  NUM_TRIALS = 25
 
 NUM_TUTORIAL_TRIALS = 2
 MAX_AMOUNT = BONUS_RATE*(NUM_TRIALS*(4+8+48)+800)
@@ -788,7 +790,25 @@ initializeExperiment = ->
       {prompt: "Did you improve your strategy in the Web of Cash game over time? If so, how did you do it?", required: true, rows: 10}
       {prompt: "How difficult did you find it to improve your performance in the Web of Cash game? What made it difficult?", required: true, rows: 10}
     ]
+  self_report_2 =
+    preamble: -> """
+      <h1>Self-Report on Performance</h1>
 
+      <br>For the following questions, answer to which extent you agree with the presented statements about your click strategy during the Web of Cash game. Please answer the following questions <strong>only with respect to the nodes that you revealed by clicking.</strong><br>
+
+    """
+    type: jsPsychSurveyMultiChoice
+    data:
+      trial_id: "self_report_2"
+    questions: [
+      {prompt: "I clicked the nodes at the first level", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "I clicked the nodes at the first level only to receive the $0.25 reward", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "I did not click any nodes just for the reward.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "I considered all the revealed node values, including those at the first level, in choosing my path.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "I did not consider the values of the nodes at the first level, even though I clicked on them.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+    ]
+
+  self_reports = [self_report, self_report_2]
   task_control["final_quiz"] =
     on_start: ->
       SCORE = Math.round(SCORE * 100) / 100
@@ -1019,14 +1039,14 @@ initializeExperiment = ->
   # if the subject passes the quiz, they continue and can earn a bonus for their performance
   # MDP trials and end if quiz is passed
   task_control["if_node2"] =
-    timeline: [ready_screen, task_control["test_trials"], task_control["final_quiz"], self_report, demographics, finish]
+    timeline: [ready_screen, task_control["test_trials"], task_control["final_quiz"], self_reports..., demographics, finish]
     conditional_function: ->
       if REPETITIONS > MAX_REPETITIONS
         return false
       else
         return true
   task_misaligned["if_node2"] =
-    timeline: [ready_screen, task_misaligned["test_trials"], task_misaligned["final_quiz"], self_report, demographics, finish]
+    timeline: [ready_screen, task_misaligned["test_trials"], task_misaligned["final_quiz"], self_reports..., demographics, finish]
     conditional_function: ->
       if REPETITIONS > MAX_REPETITIONS
         return false

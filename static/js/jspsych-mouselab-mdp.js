@@ -453,9 +453,7 @@ MouselabMDP = class MouselabMDP {
     this.timeLeft = this.minTime;
     this.waitMessage.html(`Please wait ${this.timeLeft} seconds`);
     interval = ifvisible.onEvery(1, () => {
-      if (this.freeze) {
-        return;
-      }
+      // if @freeze then return
       this.timeLeft -= 1;
       this.waitMessage.html(`Please wait ${this.timeLeft} seconds`);
       // $('#mdp-time').html @timeLeft

@@ -365,7 +365,7 @@ class MouselabMDP
     @timeLeft = @minTime
     @waitMessage.html "Please wait #{@timeLeft} seconds"
     interval = ifvisible.onEvery 1, =>
-      if @freeze then return
+      # if @freeze then return
       @timeLeft -= 1
       @waitMessage.html "Please wait #{@timeLeft} seconds"
       # $('#mdp-time').html @timeLeft
