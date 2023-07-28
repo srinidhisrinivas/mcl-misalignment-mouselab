@@ -1,7 +1,7 @@
 # coffeelint: disable=max_line_length, indentation
 
 DEBUG = false
-DEBUG_INSTRUCTIONS = true
+DEBUG_SHOW_INSTRUCTIONS = true
 DEBUG_SUBMIT = no
 TALK = no
 
@@ -728,7 +728,7 @@ initializeExperiment = ->
       task_control["mouselab_quiz"]
     ]
     conditional_function: ->
-      if DEBUG_INSTRUCTIONS
+      if DEBUG_SHOW_INSTRUCTIONS
         return true
       else
         return false
@@ -754,7 +754,7 @@ initializeExperiment = ->
       task_misaligned["mouselab_quiz"]
     ]
     conditional_function: ->
-      if DEBUG_INSTRUCTIONS
+      if DEBUG_SHOW_INSTRUCTIONS
         return true
       else
         return false
@@ -808,7 +808,10 @@ initializeExperiment = ->
       {prompt: "When I clicked on the nodes in the first level, I did NOT pay attention to the numbers that were present at those nodes.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
     ]
 
-  self_reports = [self_report, self_report_2]
+  task_control["self_reports"] = [self_report]
+
+  task_misaligned["self_reports"] = [self_report, self_report_2]
+
   task_control["final_quiz"] =
     on_start: ->
       SCORE = Math.round(SCORE * 100) / 100
@@ -1039,14 +1042,14 @@ initializeExperiment = ->
   # if the subject passes the quiz, they continue and can earn a bonus for their performance
   # MDP trials and end if quiz is passed
   task_control["if_node2"] =
-    timeline: [ready_screen, task_control["test_trials"], task_control["final_quiz"], self_reports..., demographics, finish]
+    timeline: [ready_screen, task_control["test_trials"], task_control["final_quiz"], task_control["self_reports"]..., demographics, finish]
     conditional_function: ->
       if REPETITIONS > MAX_REPETITIONS
         return false
       else
         return true
   task_misaligned["if_node2"] =
-    timeline: [ready_screen, task_misaligned["test_trials"], task_misaligned["final_quiz"], self_reports..., demographics, finish]
+    timeline: [ready_screen, task_misaligned["test_trials"], task_misaligned["final_quiz"], task_misaligned["self_reports"]..., demographics, finish]
     conditional_function: ->
       if REPETITIONS > MAX_REPETITIONS
         return false
