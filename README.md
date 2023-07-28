@@ -43,6 +43,7 @@ TODO: Add link to paper
 
 Code versions:
 
+* mcl-misaligned-full-1.0 - hosting of the full experiment
 * mcl-misaligned-full-0.0 - test hosting of full experiment
 * mcl-misaligned-pilot-1.5 - pilot to see whether parts clicked on nodes just
 * mcl-misaligned-pilot-1.0 - collecting data for first pilot of the misalignment experiment
