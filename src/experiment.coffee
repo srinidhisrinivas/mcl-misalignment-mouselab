@@ -26,8 +26,6 @@ else
   # =============================== #
   """
   CONDITION = parseInt condition
-  # TODO: remove this
-  CONDITION = 1
   console.log condition
 
 if mode is "{{ mode }}"
@@ -76,7 +74,7 @@ BONUS_RATE = .002
 if DEBUG
   NUM_TRIALS = 3
 else
-  NUM_TRIALS = 25
+  NUM_TRIALS = 40
 
 NUM_TUTORIAL_TRIALS = 2
 MAX_AMOUNT = BONUS_RATE*(NUM_TRIALS*(4+8+48)+800)
@@ -801,11 +799,13 @@ initializeExperiment = ->
     data:
       trial_id: "self_report_2"
     questions: [
-      {prompt: "I clicked the nodes at the first level", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
-      {prompt: "I clicked the nodes at the first level only to receive the $0.25 reward", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
-      {prompt: "I did not click any nodes just for the reward.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
-      {prompt: "I considered all the revealed node values, including those at the first level, in choosing my path.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
-      {prompt: "I did not consider the values of the nodes at the first level, even though I clicked on them.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "In most rounds, I clicked the nodes at the first level.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "When I clicked on the nodes in the first level, it was ONLY to receive the immediate $0.25 reward.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "When I clicked on the nodes in the first level, it was NOT ONLY to receive the immediate $0.25 reward.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "When I clicked on the nodes in the first level, I did it to see the numbers that were present at those nodes.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "When I clicked on the nodes in the first level, I did for another reason than to see the numbers that were present at those nodes.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "When I clicked on the nodes in the first level, I paid attention to the numbers that were present at those nodes.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
+      {prompt: "When I clicked on the nodes in the first level, I did NOT pay attention to the numbers that were present at those nodes.", options: ["Strongly disagree", "Disagree", "Neither disagree nor agree", "Agree", "Strongly agree"], required: true}
     ]
 
   self_reports = [self_report, self_report_2]
