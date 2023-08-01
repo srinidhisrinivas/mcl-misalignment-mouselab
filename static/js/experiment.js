@@ -361,11 +361,11 @@ initializeExperiment = function() {
 
   // Timeline elements for condition where node values disappear and there is a time limit to click next node
   task_control = {
-    "experiment_time_mins": 30
+    "experiment_time_mins": 35
   };
   // Timeline elements for condition where there is a concurrent memory task
   task_misaligned = {
-    "experiment_time_mins": 30
+    "experiment_time_mins": 35
   };
   // Opening instructions for each condition
   task_control["experiment_instructions"] = {
