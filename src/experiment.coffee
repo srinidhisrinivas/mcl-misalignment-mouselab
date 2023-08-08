@@ -25,6 +25,8 @@ else
   # ========= NORMAL MODE ========= #
   # =============================== #
   """
+  # TODO: Added this to collect last participants for misalignment condition
+  condition = 1
   CONDITION = parseInt condition
   console.log condition
 
