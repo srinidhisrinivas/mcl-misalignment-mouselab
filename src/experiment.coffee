@@ -25,8 +25,6 @@ else
   # ========= NORMAL MODE ========= #
   # =============================== #
   """
-  # TODO: Added this to collect last participants for misalignment condition
-  condition = 1
   CONDITION = parseInt condition
   console.log condition
 
@@ -57,6 +55,7 @@ COST_CORRECT_BASELINE = "The cost was always $#{BASE_COST}."
 CLICK_TIME_ANSWERS = ["Unlimited time", "10 seconds", "#{TIME_NEXT_CLICK} seconds", "1 second"]
 CLICK_TIME_CORRECT = "#{TIME_NEXT_CLICK} seconds"
 
+DONE_TASK_BEFORE = false #tracks whether participant has done web of cash before
 REPETITIONS = 0 #tracks trials in instructions quiz
 MAX_REPETITIONS = 4 #max tries they get at instructions quiz
 BONUS = 0
@@ -712,18 +711,39 @@ initializeExperiment = ->
     }
   }
 
+  repeat_check = {
+    preamble: ->  """
+      <h1> Screening Question </h1>
+      <img class='display' style="width:50%; height:auto" src='static/images/web-of-cash-5-revealed.png'/>
+    """
+    type: jsPsychSurveyMultiChoice
+    questions: [
+      {prompt: "Have you previously participated in an experiment involving the same Web of Cash game with the spider and the web (as shown above)?", options: ["Yes", "No", "Not sure"],  horizontal: false, required: true}
+    ]
+    data: {
+      trial_id: "repeat_check"
+    }
+
+    on_finish: (data) ->
+      response = data.response["Q0"]
+      if response == "Yes"
+        DONE_TASK_BEFORE = true
+  }
+
   fullscreen = {
     type: jsPsychFullscreen,
     fullscreen_mode: true,
+  }
+  fullscreen_check = {
+    timeline: [fullscreen]
     conditional_function: ->
-      console.log(INSTRUCTIONS_FAILED)
       return INSTRUCTIONS_FAILED
   }
 
   # Looping mouselab instructions until quiz is passed
   task_control["mouselab_instruct_loop"] = {
     timeline: [
-      fullscreen,
+      fullscreen_check,
       task_control["mouselab_instructions_1"],
       task_control["practice_trials"],
       task_control["mouselab_instructions_2"],
@@ -749,7 +769,7 @@ initializeExperiment = ->
   }
   task_misaligned["mouselab_instruct_loop"] = {
     timeline: [
-      fullscreen,
+      fullscreen_check,
       task_misaligned["mouselab_instructions_1"],
       task_misaligned["practice_trials"],
       task_misaligned["mouselab_instructions_2"],
@@ -770,6 +790,8 @@ initializeExperiment = ->
             alert """You got at least one question wrong. We'll send you back to the instructions and then you can try again. Number of attempts left: #{MAX_REPETITIONS-REPETITIONS}."""
             INSTRUCTIONS_FAILED = true
             return true # try again
+          else
+            return false
       psiturk.saveData()
       return false
   }
@@ -958,10 +980,12 @@ initializeExperiment = ->
        preamble: ->  """
            <h1> You've completed the HIT </h1>
 
+           You did not manage to correctly answer the quiz questions in #{MAX_REPETITIONS} attempts.
+           <br><br>
            Thanks for participating. Unfortunately we can only allow those who understand the instructions to continue with the HIT.
-
-           You will receive only the base pay amount when you submit.
-
+           <br><br>
+           You will receive a partial payment for the time you have spent in the experiment when you submit.
+           <br><br>
            Before you submit the HIT, we are interested in knowing some demographic info, and if possible, what problems you encountered with the instructions/HIT.
          """
 
@@ -974,6 +998,31 @@ initializeExperiment = ->
        ]
        button_label: 'Continue'
      }
+
+  #final screen if participants have done the task before
+  finish_repeat = {
+    type: jsPsychSurveyText
+    data:
+      trial_id: "finish_repeat"
+    preamble: ->  """
+           <h1> You've completed the HIT </h1>
+
+           Thanks for participating. Unfortunately we can only allow those who have not previously participated in a similar task to continue with the HIT.
+            <br><br>
+           You will receive a partial payment for the time you have spent in the experiment when you submit.
+            <br><br>
+           Before you submit the HIT, we are interested in knowing some demographic info, and if possible, what problems you encountered with the instructions/HIT.
+         """
+
+    questions: [
+      {prompt:'Was anything confusing or hard to understand?',required:false,rows:10}
+      {prompt:'What is your age?',required:true}
+      {prompt:'What is your gender?',required:true}
+      {prompt:'Are you colorblind?',required:true, rows:2}
+      {prompt:'Additional comments?',required:false,rows:10}
+    ]
+    button_label: 'Continue'
+  }
 
   #final screen, if participants actually participated, regardless of condition
   finish = {
@@ -1029,31 +1078,92 @@ initializeExperiment = ->
       </p>
     """
   }
+
+  # Secret code trials
+  secret_code_trial_fail =
+    type: jsPsychHtmlButtonResponse
+    choices: ['Finish HIT']
+    stimulus: () -> """
+    <h1>Completion Code Instructions (1/2)</h1>
+    <br><br><br><br>
+    You have reached the end of the experiment! The completion code consists of two parts: (1) a single letter and (2) a code with 8 characters. On this page, you will receive the first part of the code. The second part of the completion code will be on the next page.
+    <br><br>
+    The first part of your completion code is: <b>F</b>
+    <br><br>
+    Please note this down. Then, press 'Finish HIT' in order to find the second part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+
+  """
+  secret_code_trial_success =
+    type: jsPsychHtmlButtonResponse
+    choices: ['Finish HIT']
+    stimulus: () -> """
+    <h1>Completion Code Instructions (1/2)</h1>
+    <br><br><br><br>
+    You have reached the end of the experiment! The completion code consists of two parts: (1) a single letter and (2) a code with 8 characters. On this page, you will receive the first part of the code. The second part of the completion code will be on the next page.
+    <br><br>
+    The first part of your completion code is: <b>S</b>
+    <br><br>
+    Please note this down. Then, press 'Finish HIT' in order to find the second part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+
+  """
+  ""
+  secret_code_trial_repeat =
+    type: jsPsychHtmlButtonResponse
+    choices: ['Finish HIT']
+    stimulus: () -> """
+    <h1>Completion Code Instructions (1/2)</h1>
+    <br><br><br><br>
+    You have reached the end of the experiment! The completion code consists of two parts: (1) a single letter and (2) a code with 8 characters. On this page, you will receive the first part of the code. The second part of the completion code will be on the next page.
+    <br><br>
+    The first part of your completion code is: <b>R</b>
+    <br><br>
+    Please note this down. Then, press 'Finish HIT' in order to find the second part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+
+  """
+
   # ================================================ #
   # ========= TIMELINE LOGIC ======================= #
   # ================================================ #
 
   #if the subject fails the quiz 4 times they are just thanked and must leave
   if_node1 =
-    timeline: [finish_fail]
+    timeline: [finish_fail, secret_code_trial_fail]
     conditional_function: ->
-        if REPETITIONS > MAX_REPETITIONS
+        if REPETITIONS >= MAX_REPETITIONS
             return true
         else
             return false
+
+  #if the subject fails the quiz, then the screening question will not be shown
+  if_node_screen =
+    timeline: [repeat_check]
+    conditional_function: () ->
+      if REPETITIONS >= MAX_REPETITIONS
+        return false
+      else
+        return true
+
+  #if the subject reports having participated in the web of cash experiment before, they are not allowed to continue
+  if_node_repeat =
+    timeline: [finish_repeat, secret_code_trial_repeat]
+    conditional_function: ->
+      if DONE_TASK_BEFORE
+        return true
+      else
+        return false
   # if the subject passes the quiz, they continue and can earn a bonus for their performance
   # MDP trials and end if quiz is passed
   task_control["if_node2"] =
-    timeline: [ready_screen, task_control["test_trials"], task_control["final_quiz"], task_control["self_reports"]..., demographics, finish]
+    timeline: [ready_screen, task_control["test_trials"], task_control["final_quiz"], task_control["self_reports"]..., demographics, finish, secret_code_trial_success]
     conditional_function: ->
-      if REPETITIONS > MAX_REPETITIONS
+      if REPETITIONS >= MAX_REPETITIONS or DONE_TASK_BEFORE
         return false
       else
         return true
   task_misaligned["if_node2"] =
-    timeline: [ready_screen, task_misaligned["test_trials"], task_misaligned["final_quiz"], task_misaligned["self_reports"]..., demographics, finish]
+    timeline: [ready_screen, task_misaligned["test_trials"], task_misaligned["final_quiz"], task_misaligned["self_reports"]..., demographics, finish, secret_code_trial_success]
     conditional_function: ->
-      if REPETITIONS > MAX_REPETITIONS
+      if REPETITIONS >= MAX_REPETITIONS or DONE_TASK_BEFORE
         return false
       else
         return true
@@ -1066,6 +1176,8 @@ initializeExperiment = ->
       task_control["experiment_instructions"],
       task_control["mouselab_instruct_loop"]
       if_node1,
+      if_node_screen,
+      if_node_repeat,
       task_control["if_node2"]
     ]
   else if CONDITION == 1
@@ -1073,6 +1185,8 @@ initializeExperiment = ->
       task_misaligned["experiment_instructions"],
       task_misaligned["mouselab_instruct_loop"]
       if_node1,
+      if_node_screen,
+      if_node_repeat,
       task_misaligned["if_node2"]
     ]
   # ================================================ #
@@ -1082,14 +1196,7 @@ initializeExperiment = ->
   # experiment goes to full screen at start
   experiment_timeline.unshift({type:jsPsychFullscreen, message: '<p>The experiment will switch to full screen mode when you press the button below.<br> Please do not leave full screen for the duration of the experiment. </p>', button_label:'Continue', fullscreen_mode:true, delay_after:1000})
   # at end, show the secret code and then leave fullscreen
-  secret_code_trial =
-    type: jsPsychHtmlButtonResponse
-    choices: ['Finish HIT']
-    stimulus: () -> """
-    Press 'Finish HIT' in order to reach the completion code. Once the data has been saved, you will receive the code either in this window or in the original browser window where you started the experiment.
 
-  """
-  experiment_timeline.push(secret_code_trial)
   experiment_timeline.push({type:jsPsychFullscreen, fullscreen_mode:false, delay_after:1000})
   # bonus is the (roughly) total score multiplied by something, bounded by min and max amount
   calculateBonus = ->
