@@ -1,0 +1,9 @@
+executable = analysis/aenv/bin/python
+filename = analysis/power_analysis.py
+arguments = $(filename)
+output = log/power_analysis/output.stdout
+error  = log/power_analysis/output.stderr
+log   = log/power_analysis/output.log
+request_memory = 5000
+request_cpus = 1
+queue

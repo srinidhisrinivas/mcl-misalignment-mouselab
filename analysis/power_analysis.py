@@ -4,12 +4,16 @@ import json
 import pandas as pd
 import warnings
 import time
+from pathlib import Path
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
 warnings.simplefilter('ignore', ConvergenceWarning)
 # warnings.simplefilter('ignore', UserWarning)
 
+current_folder = Path(__file__).parent.resolve()
+parent_folder = current_folder.parent.resolve()
+
 # Number of simulations per sample size
-num_sims = 1000
+num_sims = 1
 
 # Number of samples to try
 Ns = [50, 100, 150, 175, 200, 225, 250, 300]
@@ -91,7 +95,7 @@ for N in Ns:
             print("Finished {0} simulations, time elapsed = {1:0.3f}s".format(sim+1, (current_time-start)))
     power_dict[N] = {k: v/num_sims for (k,v) in significance_counts.items()}
 
-    with open(f"../results/power_analysis/results_{num_sims}.txt", 'w') as f:
+    with open(f"{parent_folder}/results/power_analysis/results_{num_sims}.txt", 'w') as f:
         f.write(json.dumps(power_dict, indent=4))
 
 
