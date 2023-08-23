@@ -1,0 +1,14 @@
+{
+    "50": {
+        "trialNumbers": 1.0,
+        "C(condition)[T.1]": 0.7,
+        "trialNumbers:C(condition)[T.1]": 0.7,
+        "converged": 0.9
+    },
+    "100": {
+        "trialNumbers": 1.0,
+        "C(condition)[T.1]": 1.0,
+        "trialNumbers:C(condition)[T.1]": 1.0,
+        "converged": 0.9
+    }
+}
