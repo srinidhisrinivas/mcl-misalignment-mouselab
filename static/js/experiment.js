@@ -19,7 +19,7 @@ if (DEBUG) {
 X X X X X X X X X X X X X X X X X`);
   CONDITION = parseInt(condition);
   //CONDITION = 4
-  CONDITION = 1;
+  CONDITION = 0;
   console.log(CONDITION);
 } else {
   console.log(`# =============================== #
