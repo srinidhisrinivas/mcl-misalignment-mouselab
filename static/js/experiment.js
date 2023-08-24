@@ -5,7 +5,7 @@ var BASE_COST, BLOCKS, BONUS, BONUS_RATE, CLICK_COST_FNS, CLICK_DELAY_FNS, CLICK
 
 DEBUG = true;
 
-DEBUG_SHOW_INSTRUCTIONS = true;
+DEBUG_SHOW_INSTRUCTIONS = false;
 
 DEBUG_SUBMIT = false;
 
@@ -17,7 +17,7 @@ if (DEBUG) {
 X X X X X X X X X X X X X X X X X`);
   CONDITION = parseInt(condition);
   //CONDITION = 4
-  CONDITION = 0;
+  CONDITION = 1;
   console.log(CONDITION);
 } else {
   console.log(`# =============================== #

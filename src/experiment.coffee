@@ -1,7 +1,7 @@
 # coffeelint: disable=max_line_length, indentation
 
 DEBUG = true
-DEBUG_SHOW_INSTRUCTIONS = true
+DEBUG_SHOW_INSTRUCTIONS = false
 DEBUG_SUBMIT = no
 TALK = no
 
@@ -16,7 +16,7 @@ if DEBUG
   """
   CONDITION = parseInt condition
   #CONDITION = 4
-  CONDITION = 0
+  CONDITION = 1
   console.log CONDITION
 
 
