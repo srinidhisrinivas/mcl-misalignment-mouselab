@@ -1,6 +1,6 @@
 # coffeelint: disable=max_line_length, indentation
 
-DEBUG = false
+DEBUG = true
 DEBUG_SHOW_INSTRUCTIONS = true
 DEBUG_SUBMIT = no
 TALK = no
@@ -16,6 +16,7 @@ if DEBUG
   """
   CONDITION = parseInt condition
   #CONDITION = 4
+  condition = 0
   console.log CONDITION
 
 
@@ -755,6 +756,8 @@ initializeExperiment = ->
       else
         return false
     loop_function: (data) ->
+      # TODO: remove this
+      return false
       responses = data.last(1).values()[0].response
       for resp_id, response of responses
         if not (data.last(1).values()[0].correct[resp_id] == response)
