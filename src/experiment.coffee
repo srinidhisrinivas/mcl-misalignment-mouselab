@@ -1,7 +1,7 @@
 # coffeelint: disable=max_line_length, indentation
 
 DEBUG = true
-DEBUG_SHOW_INSTRUCTIONS = false
+DEBUG_SHOW_INSTRUCTIONS = true
 DEBUG_SUBMIT = no
 TALK = no
 
