@@ -16,7 +16,7 @@ if DEBUG
   """
   CONDITION = parseInt condition
   #CONDITION = 4
-  condition = 0
+  CONDITION = 0
   console.log CONDITION
 
 
