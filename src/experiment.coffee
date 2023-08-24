@@ -2,6 +2,7 @@
 
 DEBUG = true
 DEBUG_SHOW_INSTRUCTIONS = true
+DEBUG_TRIAL_TIMER = true
 DEBUG_SUBMIT = no
 TALK = no
 
@@ -784,6 +785,8 @@ initializeExperiment = ->
       else
         return false
     loop_function: (data) ->
+      # TODO: remove this
+      return false
       responses = data.last(1).values()[0].response
       for resp_id, response of responses
         if not (data.last(1).values()[0].correct[resp_id] == response)
@@ -893,7 +896,7 @@ initializeExperiment = ->
     ]
 
   minimumTime = PARAMS.MIN_TIME
-  if DEBUG
+  if not DEBUG_TRIAL_TIMER
     minimumTime = null
 
   ready_screen =
