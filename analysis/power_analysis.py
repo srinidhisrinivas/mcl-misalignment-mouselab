@@ -5,33 +5,40 @@ import pandas as pd
 import warnings
 import time
 from pathlib import Path
+import sys
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
 warnings.simplefilter('ignore', ConvergenceWarning)
 # warnings.simplefilter('ignore', UserWarning)
+
+num_samples = int(sys.argv[1])
 
 current_folder = Path(__file__).parent.resolve()
 parent_folder = current_folder.parent.resolve()
 
 # Number of simulations per sample size
-num_sims = 1000
+num_sims = 10
 
 # Number of samples to try
-Ns = [50, 100, 150, 175, 200, 225, 250, 300]
+Ns = [num_samples]
 
 # Significance threshold
 alpha = 0.05
 
-# Fixed effects
-# Slope
-fs = -0.052
-fs_int = 0.026
+# Fixed slope + interaction
+fs = -0.052376
+fs_int = 0.026293
 
-# Intercept
-fi = 2.118
-fi_int = -0.031
+# Random slope
+rs_var = 0.0050375
+
+# Fixed Intercept + interaction
+fi = 2.117712
+fi_int = -0.030976
 
 # Random intercept
-ri = 0.304
+ri_var = 0.3086228
+
+rsxri_cov = 0.0192782
 
 # Defining experiment
 output_var_name = "expectedScores_scaled"
@@ -66,18 +73,23 @@ for N in Ns:
             # Generate N datasets
             for i in range(N):
                 worker_id += 1
-                # Regressors - trial number
-                trialNums = list(range(1, num_trials + 1))
+                # Regressors - trial number - centered
+                trialNums = np.array(list(range(1, num_trials + 1)))
+                trialNums = trialNums - trialNums.mean()
 
-                # Sample random intercepts
-                intercepts = np.random.normal(fi + cond * fi_int, ri, (1, num_trials))
+                res = np.random.multivariate_normal(
+                    np.array([fs + cond * fs_int, fi + cond * fi_int]),
+                    np.array([[rs_var, rsxri_cov],
+                              [rsxri_cov, ri_var]]),
+                    num_trials
+                )
 
                 # Generate data for response variables with fixed slope and random intercept
-                outcomes = np.array(trialNums) * (fs + cond * fs_int) + intercepts
+                outcomes = np.array(trialNums) * res[:,0] + res[:,1]
                 df_dict["workerId"] += [worker_id] * num_trials
                 df_dict["condition"] += [cond] * num_trials
                 df_dict[output_var_name] += list(outcomes.flatten().astype(float))
-                df_dict["trialNumbers"] += trialNums
+                df_dict["trialNumbers"] += list(trialNums)
 
         gen_df = pd.DataFrame.from_dict(df_dict)
 
@@ -95,7 +107,7 @@ for N in Ns:
             print("Finished {0} simulations, time elapsed = {1:0.3f}s".format(sim+1, (current_time-start)))
     power_dict[N] = {k: v/num_sims for (k,v) in significance_counts.items()}
 
-    with open(f"{parent_folder}/results/power_analysis/results_{num_sims}.txt", 'w') as f:
-        f.write(json.dumps(power_dict, indent=4))
+with open(f"{parent_folder}/results/power_analysis/results_{num_sims}_{num_samples}.txt", 'w') as f:
+    f.write(json.dumps(power_dict, indent=4))
 
 

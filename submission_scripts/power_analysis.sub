@@ -1,9 +1,9 @@
 executable = analysis/aenv/bin/python
 filename = analysis/power_analysis.py
-arguments = $(filename)
+arguments = $(filename) $(n)
 output = log/power_analysis/output.stdout
 error  = log/power_analysis/output.stderr
 log   = log/power_analysis/output.log
 request_memory = 5000
 request_cpus = 1
-queue
+queue n from submission_scripts/sample_sizes.txt
