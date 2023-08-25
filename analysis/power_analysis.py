@@ -16,7 +16,7 @@ current_folder = Path(__file__).parent.resolve()
 parent_folder = current_folder.parent.resolve()
 
 # Number of simulations per sample size
-num_sims = 10
+num_sims = 1000
 
 # Number of samples to try
 Ns = [num_samples]
