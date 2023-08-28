@@ -16,7 +16,7 @@ current_folder = Path(__file__).parent.resolve()
 parent_folder = current_folder.parent.resolve()
 
 # Number of simulations per sample size
-num_sims = 1000
+num_sims = 10
 
 # Number of samples to try
 Ns = [num_samples]
@@ -59,8 +59,10 @@ for N in Ns:
     # For each sample size, simulate num_sims number of experiments
     significance_counts = {e: 0 for e in fixed_effects}
     significance_counts["converged"] = 0
+    significance_counts["not_converged"] = 0
     start = time.time()
-    for sim in range(num_sims):
+    sim = 1
+    while sim <= num_sims:
         worker_id = 0
         df_dict = {
             "workerId": [],
@@ -97,14 +99,22 @@ for N in Ns:
         glm = smf.mixedlm(formula=formula, data=gen_df, groups=gen_df['workerId'])
         results = glm.fit()
 
-        # See significance of each fixed effect
-        for e in fixed_effects:
-            pval = results.pvalues[e]
-            significance_counts[e] += int(pval < alpha)
-        significance_counts["converged"] += int(results.converged)
-        if (sim+1) % print_every_sims == 0:
-            current_time = time.time()
-            print("Finished {0} simulations, time elapsed = {1:0.3f}s".format(sim+1, (current_time-start)))
+        if results.converged:
+            # Count the simulation
+            sim += 1
+
+            # See significance of each fixed effect
+            for e in fixed_effects:
+                pval = results.pvalues[e]
+                significance_counts[e] += int(pval < alpha)
+            significance_counts["converged"] += int(results.converged)
+            if (sim+1) % print_every_sims == 0:
+                current_time = time.time()
+                print("Finished {0} simulations, time elapsed = {1:0.3f}s".format(sim+1, (current_time-start)))
+        else:
+            # Don't count the simulation and repeat
+            significance_counts["not_converged"] += 1
+            continue
     power_dict[N] = {k: v/num_sims for (k,v) in significance_counts.items()}
 
 with open(f"{parent_folder}/results/power_analysis/results_{num_sims}_{num_samples}.txt", 'w') as f:
