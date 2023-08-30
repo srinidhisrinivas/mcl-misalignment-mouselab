@@ -1,6 +1,6 @@
 # coffeelint: disable=max_line_length, indentation
 
-DEBUG = true
+DEBUG = false
 DEBUG_SHOW_INSTRUCTIONS = true
 DEBUG_TRIAL_TIMER = true
 DEBUG_SUBMIT = no
@@ -77,7 +77,8 @@ BONUS_RATE = .002
 if DEBUG
   NUM_TRIALS = 3
 else
-  NUM_TRIALS = 40
+  # TODO: Update this
+  NUM_TRIALS = 10
 
 NUM_TUTORIAL_TRIALS = 2
 MAX_AMOUNT = BONUS_RATE*(NUM_TRIALS*(4+8+48)+800)
@@ -757,8 +758,6 @@ initializeExperiment = ->
       else
         return false
     loop_function: (data) ->
-      # TODO: remove this
-      return false
       responses = data.last(1).values()[0].response
       for resp_id, response of responses
         if not (data.last(1).values()[0].correct[resp_id] == response)
@@ -785,8 +784,6 @@ initializeExperiment = ->
       else
         return false
     loop_function: (data) ->
-      # TODO: remove this
-      return false
       responses = data.last(1).values()[0].response
       for resp_id, response of responses
         if not (data.last(1).values()[0].correct[resp_id] == response)

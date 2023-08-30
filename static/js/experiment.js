@@ -3,7 +3,7 @@
 var BASE_COST, BLOCKS, BONUS, BONUS_RATE, CLICK_COST_FNS, CLICK_DELAY_FNS, CLICK_DEPTHS, CLICK_TIME_ANSWERS, CLICK_TIME_CORRECT, CONDITION, CORRECT_SEQ_PCTG, COST, COST_ANSWERS, COST_ANSWERS_BASELINE, COST_CORRECT, COST_CORRECT_BASELINE, COST_EXPLANATION, COST_QUESTION, COST_QUESTION_BASELINE, DEBUG, DEBUG_SHOW_INSTRUCTIONS, DEBUG_SUBMIT, DEBUG_TRIAL_TIMER, DONE_TASK_BEFORE, INSTRUCTIONS_FAILED, MAX_AMOUNT, MAX_REPETITIONS, NUM_SEQUENCE_LENGTH, NUM_TRIALS, NUM_TUTORIAL_TRIALS, N_TRIAL, PARAMS, PRACTICE_TIME_NEXT_CLICK, QUESTIONNAIRES, REPETITIONS, SCORE, STRUCTURE, TALK, TIME_NEXT_CLICK, TIME_NODE_REVEAL, TRIALS, bonus_text, calculateBonus, colorInterpolation, createQuestionnaires, createStartButton, early_nodes, final_nodes, getClickCosts, getColor, getCost, getNumberSequenceTrials, getPracticeTrials, getStroopTrials, getTrials, initializeExperiment, jsPsych, numCorrectSequences, pracTrialCount, psiturk, saveData, trialCount,
   indexOf = [].indexOf;
 
-DEBUG = true;
+DEBUG = false;
 
 DEBUG_SHOW_INSTRUCTIONS = true;
 
@@ -115,7 +115,8 @@ BONUS_RATE = .002;
 if (DEBUG) {
   NUM_TRIALS = 3;
 } else {
-  NUM_TRIALS = 40;
+  // TODO: Update this
+  NUM_TRIALS = 10;
 }
 
 NUM_TUTORIAL_TRIALS = 2;
@@ -910,8 +911,6 @@ You <em>must</em> pass the quiz in at most <strong>${MAX_REPETITIONS}</strong> a
     },
     loop_function: function(data) {
       var resp_id, response, responses;
-      // TODO: remove this
-      return false;
       responses = data.last(1).values()[0].response;
       for (resp_id in responses) {
         response = responses[resp_id];
@@ -939,8 +938,6 @@ You <em>must</em> pass the quiz in at most <strong>${MAX_REPETITIONS}</strong> a
     },
     loop_function: function(data) {
       var resp_id, response, responses;
-      // TODO: remove this
-      return false;
       responses = data.last(1).values()[0].response;
       for (resp_id in responses) {
         response = responses[resp_id];
