@@ -59,7 +59,7 @@ CLICK_TIME_CORRECT = "#{TIME_NEXT_CLICK} seconds"
 
 DONE_TASK_BEFORE = false #tracks whether participant has done web of cash before
 REPETITIONS = 0 #tracks trials in instructions quiz
-MAX_REPETITIONS = 3 #max tries they get at instructions quiz
+MAX_REPETITIONS = 4 #max tries they get at instructions quiz
 BONUS = 0
 QUESTIONNAIRES = undefined
 BLOCKS = undefined
