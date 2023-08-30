@@ -84,7 +84,7 @@ DONE_TASK_BEFORE = false; //tracks whether participant has done web of cash befo
 
 REPETITIONS = 0; //tracks trials in instructions quiz
 
-MAX_REPETITIONS = 4; //max tries they get at instructions quiz
+MAX_REPETITIONS = 3; //max tries they get at instructions quiz
 
 BONUS = 0;
 
@@ -1440,11 +1440,11 @@ Please briefly answer the questions below before you submit the HIT.`;
     stimulus: function() {
       return `<h1>Completion Code Instructions (1/2)</h1>
 <br><br><br><br>
-You have reached the end of the experiment! The completion code consists of two parts: (1) a single letter and (2) a code with 8 characters. On this page, you will receive the first part of the code. The second part of the completion code will be on the next page.
+You have reached the end of the experiment! The completion code consists of two parts: (1) a code with 2 characters (2) a code with 6 characters. On this page, you will receive the second part of the code. The first part of the completion code will be on the next page.
 <br><br>
-The first part of your completion code is: <b>F</b>
+The second part of your completion code is: <b>AYIWIP</b>
 <br><br>
-Please note this down. Then, press 'Finish HIT' in order to find the second part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+Please note this down. Then, press 'Finish HIT' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
 `;
     }
   };
@@ -1454,11 +1454,11 @@ Please note this down. Then, press 'Finish HIT' in order to find the second part
     stimulus: function() {
       return `<h1>Completion Code Instructions (1/2)</h1>
 <br><br><br><br>
-You have reached the end of the experiment! The completion code consists of two parts: (1) a single letter and (2) a code with 8 characters. On this page, you will receive the first part of the code. The second part of the completion code will be on the next page.
+You have reached the end of the experiment! The completion code consists of two parts: (1) a code with 2 characters (2) a code with 6 characters. On this page, you will receive the second part of the code. The first part of the completion code will be on the next page.
 <br><br>
-The first part of your completion code is: <b>S</b>
+The second part of your completion code is: <b>EWEK22</b>
 <br><br>
-Please note this down. Then, press 'Finish HIT' in order to find the second part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+Please note this down. Then, press 'Finish HIT' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
 `;
     }
   };
@@ -1469,11 +1469,11 @@ Please note this down. Then, press 'Finish HIT' in order to find the second part
     stimulus: function() {
       return `<h1>Completion Code Instructions (1/2)</h1>
 <br><br><br><br>
-You have reached the end of the experiment! The completion code consists of two parts: (1) a single letter and (2) a code with 8 characters. On this page, you will receive the first part of the code. The second part of the completion code will be on the next page.
+You have reached the end of the experiment! The completion code consists of two parts: (1) a code with 2 characters (2) a code with 6 characters. On this page, you will receive the second part of the code. The first part of the completion code will be on the next page.
 <br><br>
-The first part of your completion code is: <b>R</b>
+The second part of your completion code is: <b>6GR61H</b>
 <br><br>
-Please note this down. Then, press 'Finish HIT' in order to find the second part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+Please note this down. Then, press 'Finish HIT' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
 `;
     }
   };
