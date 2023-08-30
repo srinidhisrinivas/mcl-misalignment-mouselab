@@ -115,8 +115,7 @@ BONUS_RATE = .002;
 if (DEBUG) {
   NUM_TRIALS = 3;
 } else {
-  // TODO: Update this
-  NUM_TRIALS = 10;
+  NUM_TRIALS = 40;
 }
 
 NUM_TUTORIAL_TRIALS = 2;
@@ -367,11 +366,11 @@ initializeExperiment = function() {
 
   // Timeline elements for condition where node values disappear and there is a time limit to click next node
   task_control = {
-    "experiment_time_mins": 35
+    "experiment_time_mins": 40
   };
   // Timeline elements for condition where there is a concurrent memory task
   task_misaligned = {
-    "experiment_time_mins": 35
+    "experiment_time_mins": 40
   };
   // Opening instructions for each condition
   task_control["experiment_instructions"] = {
