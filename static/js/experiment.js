@@ -1436,7 +1436,7 @@ Please briefly answer the questions below before you submit the HIT.`;
   // Secret code trials
   secret_code_trial_fail = {
     type: jsPsychHtmlButtonResponse,
-    choices: ['Finish HIT'],
+    choices: ['Next'],
     stimulus: function() {
       return `<h1>Completion Code Instructions (1/2)</h1>
 <br><br><br><br>
@@ -1444,13 +1444,14 @@ You have reached the end of the experiment! The completion code consists of two 
 <br><br>
 The second part of your completion code is: <b>AYIWIP</b>
 <br><br>
-Please note this down. Then, press 'Finish HIT' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
-`;
+Please note this down. Then, press 'Next' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+ <br><br>
+<h2 style='color: red;'>Note: this is <strong>NOT</strong> the full completion code. Copy this down and click 'Next' to get the full completion code on the next page.</h2>`;
     }
   };
   secret_code_trial_success = {
     type: jsPsychHtmlButtonResponse,
-    choices: ['Finish HIT'],
+    choices: ['Next'],
     stimulus: function() {
       return `<h1>Completion Code Instructions (1/2)</h1>
 <br><br><br><br>
@@ -1458,14 +1459,15 @@ You have reached the end of the experiment! The completion code consists of two 
 <br><br>
 The second part of your completion code is: <b>EWEK22</b>
 <br><br>
-Please note this down. Then, press 'Finish HIT' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
-`;
+Please note this down. Then, press 'Next' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+ <br><br>
+<h2 style='color: red;'>Note: this is <strong>NOT</strong> the full completion code. Copy this down and click 'Next' to get the full completion code on the next page.</h2>`;
     }
   };
   "";
   secret_code_trial_repeat = {
     type: jsPsychHtmlButtonResponse,
-    choices: ['Finish HIT'],
+    choices: ['Next'],
     stimulus: function() {
       return `<h1>Completion Code Instructions (1/2)</h1>
 <br><br><br><br>
@@ -1473,7 +1475,10 @@ You have reached the end of the experiment! The completion code consists of two 
 <br><br>
 The second part of your completion code is: <b>6GR61H</b>
 <br><br>
-Please note this down. Then, press 'Finish HIT' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+Please note this down. Then, press 'Next' in order to find the first part of your completion code. Once the data has been saved, you will receive this code either in this window or in the original browser window where you started the experiment.
+<br><br>
+<h2 style='color: red;'>Note: this is <strong>NOT</strong> the full completion code. Copy this down and click 'Next' to get the full completion code on the next page.</h2>
+
 `;
     }
   };
