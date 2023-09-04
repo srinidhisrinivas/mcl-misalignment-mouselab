@@ -29,8 +29,8 @@ else
   """
 
   CONDITION = parseInt condition
-  # TODO: changed this for collecting only misaligned participants
-  CONDITION = 1
+  # TODO: changed this for collecting only control participants
+  CONDITION = 0
   console.log condition
 
 if mode is "{{ mode }}"
