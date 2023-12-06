@@ -40,7 +40,7 @@ $(window).on('load', function() {
       MIN_TIME: 7,
       inspectCost: COST,
       startTime: Date(Date.now()),
-      variance: '1_2_4_8_32',
+      variance: '1_2_4_8_44',
       branching: '31123'
     };
     COST_EXPLANATION = "Some nodes may require more clicks than others.";
@@ -146,6 +146,11 @@ initializeExperiment = function() {
       answer_trial_id: "answer_"+ (i+1)
     })
   }
+  let clickCostFn = (n) => {
+    let d = CLICK_DEPTHS_ALL[id][n] - 1
+    // return [-0.25, 0.35, 0.95, 1.55, 2.15][d]
+    return 1.4
+  }
   let trials_timeline = {
     timeline: [
       {
@@ -167,11 +172,10 @@ initializeExperiment = function() {
         layout: STRUCTURE.layout,
         initial: STRUCTURE.initial,
         num_trials: num_trials,
-        stateClickCost: function() {
-          return COST;
-        },
+        showCost: true,
+        stateClickCost: clickCostFn,
         stateDisplay: 'click',
-        stateResetMs: 5000,
+        stateResetMs: 3000,
         accumulateReward: true,
         wait_for_click: true,
         withholdReward: false,
@@ -182,8 +186,10 @@ initializeExperiment = function() {
         revealOnArrive: false,
         forbidReclick: true,
         highlightClicked: true,
+        nextClickTimeLimit: 3,
         // playerImage: 'static/images/spider.png',
-        playerImage: 'https://freepngimg.com/thumb/spider/15-black-spider-siluet-logo-png-image.png',
+        // playerImage: 'https://freepngimg.com/thumb/spider/15-black-spider-siluet-logo-png-image.png',
+        playerImage: 'https://imgtr.ee/images/2023/11/17/138a7c4b52291f2b7711802e91cc87a1.png',
         // trial_id: jsPsych.timelineVariable('trial_id',true)
         blockName: 'test',
         upperMessage: "Web of Cash - Practice Round",
