@@ -43,7 +43,7 @@ TODO: Add link to paper
 
 Code versions:
 
-* mcl-misaligned-full-r-[1-x].0 - batches of collection of full data for replication study
+* mcl-misaligned-full-r-[1-5].0 - batches of collection of full data for replication study
 * mcl-misaligned-test - hosting a test version of the experiment for feedback from others
 * mcl-misaligned-full-[2-5].0 - first batch of full experiment data
 * mcl-misaligned-full-1.0 - pilot of the updated exclusion criteria 
