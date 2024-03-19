@@ -4,6 +4,10 @@ Firstly, spm12 needs to be installed (see instructions https://www.fil.ion.ucl.a
 
 The spm12 folder and its subdirectories must be present in the MATLAB path before running the scripts.
 
+Then, in the files `spm12/spm_BMS.m` and `spm12/spm_compare_families.m`, the following line must be added following the preamble of the function:
+
+`lme = -0.5 * lme`
+
 Generate a single BIC dataset using the notebook `analysis/Model Analysis.ipynb`. The file must have the name <code><condition>_bicall.csv</code>. And must be stored in the folder `misalignment_bic_frames_run2`.
 
 where `<condition>` is `control` or `misaligned`.
