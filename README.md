@@ -42,7 +42,7 @@ How to run:
   * `psiturk server on`
 * The experiment can be opened in a web browser at address `https://localhost:22362`
 
-The repository can be found on OSF here: 
+The repository can be found on OSF here: https://osf.io/8xdsa/
 
 Code versions:
 
